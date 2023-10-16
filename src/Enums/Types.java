@@ -1,6 +1,6 @@
-package Map;
+package Enums;
 
-public enum EnumTypes {
+public enum Types {
     FEU,
     EAU,
     TERRE,

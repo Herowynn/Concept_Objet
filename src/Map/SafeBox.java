@@ -1,5 +1,7 @@
 package Map;
 
+import Enums.Types;
+
 public class SafeBox extends Box{
-    public EnumTypes Type;
+    public Types Type;
 }
