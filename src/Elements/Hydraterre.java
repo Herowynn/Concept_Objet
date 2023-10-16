@@ -1,5 +1,5 @@
 package Elements;
 
-public interface Hydraterre extends Elemental {
+public abstract class Hydraterre extends Elemental {
 
 }

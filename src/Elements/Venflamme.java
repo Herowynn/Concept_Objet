@@ -1,5 +1,5 @@
 package Elements;
 
-public interface Venflamme extends Elemental {
+public abstract class Venflamme extends Elemental {
 
 }

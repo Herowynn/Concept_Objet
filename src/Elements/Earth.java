@@ -1,4 +1,4 @@
 package Elements;
 
-public class Earth implements Hydraterre {
+public class Earth extends Hydraterre {
 }
