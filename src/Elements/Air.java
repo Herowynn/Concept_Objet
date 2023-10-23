@@ -1,5 +1,11 @@
 package Elements;
 
-public class Air implements Venflamme {
-    
+public class Air extends Venflamme {
+
+    public Air(String name){
+        ANSI_Code = "\u001B[35m";
+        Name = name;
+        //BonusMalusEnergy
+        //BonusMalusMovement
+    }
 }
