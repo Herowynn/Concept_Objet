@@ -1,4 +1,4 @@
 package Elements;
 
-public class Fire implements Venflamme {
+public class Fire extends Venflamme {
 }
