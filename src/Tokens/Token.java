@@ -28,21 +28,19 @@ public abstract class Token {
     public Map<String, Integer> getCoordinateXY() {
         Map<String, Integer> coordinatesXY = new HashMap<>();
         // Ajoute des valeurs pour les coordonnées X et Y
-        coordinatesXY.put("coordinateX", this.CoordinateX);
-        coordinatesXY.put("coordinateY", this.CoordinateY);
+        coordinatesXY.put("coordinateX", CoordinateX);
+        coordinatesXY.put("coordinateY", CoordinateY);
         System.out.println(coordinatesXY);
         return coordinatesXY;
-
     }
 
     public double getEnergyLeft() {
         System.out.println("The energy of the token is: " + this.EnergyLeft);
-        return this.EnergyLeft;
+        return EnergyLeft;
     }
 
     // The choice of the direction will be done randomly at each move
     public void ChoixDirection() {
-
         // We put all the direction in a list
         Directions[] directions = Directions.values();
 
@@ -64,15 +62,15 @@ public abstract class Token {
         int min = -5;
         int max = 5;
 
-        // Generate a random number between 0 and 5, inclusive
+        // Generate a random number between -5 and 5, inclusive
         int randomNumber = random.nextInt((max - min) + 1) + min;
         System.out.println("The random number is: " + randomNumber);
         return randomNumber;
-
     }
 
     // This method calcul the last direction of the token according to the
     // coordinates of moving
+    // coordinatesX et coordinatesY are the coordinates the token will take at his future move
     public Directions calculTheLastDirection(int coordinateX, int coordinateY) {
         Directions lastDirection;
         if (coordinateX > 0 && coordinateY > 0) {

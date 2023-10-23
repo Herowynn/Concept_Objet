@@ -23,14 +23,14 @@ public class Rook extends Token {
 
         switch (Type) {
             case AIR:
-                this.EnergyMax = 50;
-                this.EnergyLeft = 50;
-                this.MaxMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
-                this.MinMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
+                EnergyMax = 50;
+                EnergyLeft = 50;
+                MaxMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
+                MinMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
                 // Generate a random double in this intervale [ 80% of 1.0 and 80% of 3.0] for
                 // the Movement price
-                this.MovementPrice = this.MinMovementPrice
-                        + (random.nextDouble() * (this.MaxMovementPrice - this.MinMovementPrice));
+                MovementPrice = MinMovementPrice
+                        + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
 
                 System.out.println(this.name + " is a rook from the Air group, their team is Venflamme.");
                 break;
@@ -43,34 +43,34 @@ public class Rook extends Token {
 
                 // Generate a random double in this intervale [ 80% of 1.0 and 80% of 3.0] for
                 // the Movement price
-                this.MovementPrice = this.MinMovementPrice
-                        + (random.nextDouble() * (this.MaxMovementPrice - this.MinMovementPrice));
+                MovementPrice = MinMovementPrice
+                        + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
 
-                System.out.println(this.name + " is a rook from the Earth group, their team is Hydraterre.");
+                System.out.println(name + " is a rook from the Earth group, their team is Hydraterre.");
                 break;
 
             case EAU:
-                this.EnergyMax = 35;
-                this.EnergyLeft = 35;
-                this.MaxMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
-                this.MinMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
+                EnergyMax = 35;
+                EnergyLeft = 35;
+                MaxMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
+                MinMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
                 // Generate a random double in this intervale [ 65% of 1.0 and 65% of 3.0] for
                 // the Movement price
-                this.MovementPrice = this.MinMovementPrice
-                        + (random.nextDouble() * (this.MaxMovementPrice - this.MinMovementPrice));
-                System.out.println(this.name + " is a rook from the Water group, their team is Hydraterre.");
+                MovementPrice = MinMovementPrice
+                        + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
+                System.out.println(name + " is a rook from the Water group, their team is Hydraterre.");
                 break;
 
             case FEU:
-                this.EnergyMax = 45;
-                this.EnergyLeft = 45;
-                this.MaxMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
-                this.MinMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
+                EnergyMax = 45;
+                EnergyLeft = 45;
+                MaxMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
+                MinMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
                 // Generate a random double in this intervale [ 65% of 1.0 and 65% of 3.0] for
                 // the Movement price
-                this.MovementPrice = this.MinMovementPrice
-                        + (random.nextDouble() * (this.MaxMovementPrice - this.MinMovementPrice));
-                System.out.println(this.name + " is a rook from the Fire group, their team is Venflamme.");
+                MovementPrice = MinMovementPrice
+                        + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
+                System.out.println(name + " is a rook from the Fire group, their team is Venflamme.");
                 break;
 
         }
@@ -79,40 +79,40 @@ public class Rook extends Token {
     @Override
     public void Move() {
 
-        if (this.EnergyLeft >= 0.20 * EnergyMax) {
+        if (EnergyLeft >= 0.20 * EnergyMax) {
             // The rooks move only two squares to the left.
 
             int mapLength = 100; // length of the map
             int mapWidth = 50; // width of the map
 
             // Number of case to move
-            int numberCaseMovement = this.generateRandomNumberOfCase();
+            int numberCaseMovement = generateRandomNumberOfCase();
 
             // Moving
 
             // obstacles
             int i = 0;
-            while (this.CoordinateX < mapLength && i < Math.abs(numberCaseMovement)) {
+            while (CoordinateX < mapLength && i < Math.abs(numberCaseMovement)) {
                 i = i + 1;
                 if (numberCaseMovement <= 0) {
-                    this.CoordinateX = this.CoordinateX - i;
+                    CoordinateX = CoordinateX - i;
 
                 } else {
-                    this.CoordinateX = this.CoordinateX + i;
+                    CoordinateX = CoordinateX + i;
 
                 }
-                System.out.println(this.CoordinateX);
-                this.CoordinateY = 0;
+                System.out.println(CoordinateX);
+                CoordinateY = 0;
 
             }
             // Loss of energy after the moving
-            this.EnergyLeft = this.EnergyLeft - (numberCaseMovement * this.MovementPrice);
-            this.EnergyLeft = Math.round(this.EnergyLeft * 10.0) / 10.0;
-            if (this.EnergyLeft < 0) {
-                this.EnergyLeft = 0;
+            EnergyLeft = EnergyLeft - (numberCaseMovement * MovementPrice);
+            EnergyLeft = Math.round(EnergyLeft * 10.0) / 10.0;
+            if (EnergyLeft < 0) {
+                EnergyLeft = 0;
             }
             // Saving of the last direction
-            this.LastDirection = this.calculTheLastDirection(numberCaseMovement, 0);
+            LastDirection = calculTheLastDirection(numberCaseMovement, 0);
 
         }
     }

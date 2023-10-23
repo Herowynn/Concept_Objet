@@ -1,5 +1,5 @@
 package Elements;
 
-public class Air implements Venflamme {
+public class Air extends Venflamme {
     
 }
