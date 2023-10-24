@@ -1,5 +1,7 @@
 package Elements;
 
+import Enums.Types;
+
 public class Fire extends Venflamme {
     private static Fire Instance;
 
@@ -13,9 +15,8 @@ public class Fire extends Venflamme {
     public Fire(String name){
         ANSI_Code = "\u001B[31m";
         Name = name;
-        //BonusMalusEnergy
-        //BonusMalusMovement
-        createTokens();
+        CreatePercentagesTokens(30, 20, 20, 30);
+        createTokens(Types.FEU);
         System.out.println("création d'un Fire Master nommé " + Name);
 
     }

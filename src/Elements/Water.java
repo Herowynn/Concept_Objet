@@ -1,5 +1,7 @@
 package Elements;
 
+import Enums.Types;
+
 public class Water extends Hydraterre {
     private static Water Instance;
 
@@ -12,9 +14,8 @@ public class Water extends Hydraterre {
     public Water(String name){
         ANSI_Code = "\u001B[34m";
         Name = name;
-        //BonusMalusEnergy
-        //BonusMalusMovement
-        createTokens();
+        CreatePercentagesTokens(25, 25, 25, 25);
+        createTokens(Types.EAU);
         System.out.println("création d'un Water Master nommé " + Name);
 
     }

@@ -1,5 +1,7 @@
 package Elements;
 
+import Enums.Types;
+
 public class Air extends Venflamme {
     private static Air Instance;
 
@@ -13,9 +15,9 @@ public class Air extends Venflamme {
     public Air(String name){
         ANSI_Code = "\u001B[35m";
         Name = name;
-        createTokens();
+        CreatePercentagesTokens(15, 35, 10, 40);
+        createTokens(Types.AIR);
         System.out.println("création d'un Air Master nommé " + Name);
-
     }
 
 
