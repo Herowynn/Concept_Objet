@@ -9,7 +9,7 @@ import Enums.*;
 public abstract class Token {
     public Types Type;
     public String[] KnownMessages;
-    public String name;
+    public String Name;
     public double EnergyLeft;
     public double EnergyMax;
     public double MovementPrice;

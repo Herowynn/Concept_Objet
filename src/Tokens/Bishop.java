@@ -7,7 +7,9 @@ import Enums.Types;
 
 public class Bishop extends Token {
 
-    public Bishop(Types Type, String name) {
+    public Bishop(Types type, String name) {
+        Type = type;
+        Name = name;
         Random random = new Random();
         // All the Bishop are suppose to have the same Movement price intervals
         this.MaxMovementPrice = 3.0;

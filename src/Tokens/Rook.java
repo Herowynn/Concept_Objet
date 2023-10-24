@@ -9,7 +9,7 @@ public class Rook extends Token {
 
     public Rook(Types Type, String name) {
         this.Type = Type;
-        this.name = name;
+        this.Name = name;
         Random random = new Random();
         // All the Bishop are suppose to have the same Movement price intervals
         this.MaxMovementPrice = 6.0;
@@ -32,7 +32,7 @@ public class Rook extends Token {
                 MovementPrice = MinMovementPrice
                         + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
 
-                System.out.println(this.name + " is a rook from the Air group, their team is Venflamme.");
+                System.out.println(this.Name + " is a rook from the Air group, their team is Venflamme.");
                 break;
 
             case TERRE:

@@ -7,7 +7,9 @@ import Enums.Types;
 
 public class Queen extends Token {
 
-    public Queen(Types Type, String name) {
+    public Queen(Types type, String name) {
+        Type = type;
+        Name = name;
         Random random = new Random();
         // All the Queen are supposed to have the same Movement price intervals
         this.MaxMovementPrice = 2.0;
