@@ -1,10 +1,12 @@
 package Elements;
 
-import Enums.Types;
+import Enums.*;
 import Tokens.*;
+import Mapping.*;
 
 import javax.swing.text.Element;
 import java.util.*;
+import java.util.Map;
 
 public abstract class Elemental {
     public String Name;
@@ -16,6 +18,7 @@ public abstract class Elemental {
     public Map<String, Integer> BonusMalusMovement = new Hashtable<String, Integer>();
     protected HashMap<String, Integer> PercentagesCreationToken = new HashMap<String, Integer>();
     protected List<Token> ElementTokens = new ArrayList<Token>();
+    protected Mapping.Map GameMap;
 
     public void CollectMessages(String[] messagesToCollect){
         for(String message : messagesToCollect){

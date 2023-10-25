@@ -66,7 +66,6 @@ public class Bishop extends Token {
         }
     }
 
-    @Override
     public void Move() {
         int mapLength = 100; // length of the map
         int mapWidth = 50; // width of the map
@@ -119,12 +118,10 @@ public class Bishop extends Token {
 
     }
 
-    @Override
     public void EnergyRegeneration() {
 
     }
 
-    @Override
     public void MessagesExchange() {
 
     }

@@ -13,38 +13,19 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        /*System.out.println("Ceci est le code du projet !!!");
-        Map test = new Map(51, 14);
-        test.printMap();
+        Map myMap = new Map(51, 14);
+        myMap.printMap();
 
-
-        Queen rook1 = new Queen(Types.AIR, "Léonard");
+        /*Queen rook1 = new Queen(Types.AIR, "Léonard");
         rook1.getCoordinateXY();
         rook1.Move();
         rook1.getCoordinateXY();
         rook1.getEnergyLeft();*/
 
         List<Token> tokens = new ArrayList<Token>();
-
-        Air AirMaster = Air.getInstance("AirMaster");
-        Fire FireMaster = Fire.getInstance("FireMaster");
-        Water WaterMaster = Water.getInstance("WaterMaster");
-        Earth EarthMaster = Earth.getInstance("EarthMaster");
-        System.out.println("Air");
-        for(Token token : AirMaster.GetTokenList()){
-            System.out.println(token.Name);
-        }
-        System.out.println("Fire");
-        for(Token token : FireMaster.GetTokenList()){
-            System.out.println(token.Name);
-        }
-        System.out.println("Earth");
-        for(Token token : EarthMaster.GetTokenList()){
-            System.out.println(token.Name);
-        }
-        System.out.println("Water");
-        for(Token token : WaterMaster.GetTokenList()){
-            System.out.println(token.Name);
-        }
+        Air AirMaster = Air.getInstance("AirMaster", myMap);
+        Fire FireMaster = Fire.getInstance("FireMaster", myMap);
+        Water WaterMaster = Water.getInstance("WaterMaster", myMap);
+        Earth EarthMaster = Earth.getInstance("EarthMaster", myMap);
     }
 }
