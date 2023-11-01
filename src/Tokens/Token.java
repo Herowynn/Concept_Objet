@@ -3,8 +3,8 @@ package Tokens;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
 import Enums.*;
+import Mapping.SafeBox;
 
 public abstract class Token {
     public Types Type;
@@ -18,12 +18,48 @@ public abstract class Token {
     public int CoordinateX;
     public int CoordinateY;
     public Directions LastDirection;
-
-    abstract public void Move();
+    protected Mapping.Map GameMap;
 
     abstract public void EnergyRegeneration();
 
-    abstract public void MessagesExchange();
+    abstract public void MessagesExchangeBetweenAllies();
+    abstract public void MessagesExchangeBetweenSameTypes();
+    abstract public void MessagesExchangeBetweenEnemies();
+
+    public Token(Mapping.Map map){
+        GameMap = map;
+    }
+
+    public void Move(){
+        verifyBoxes();
+    }
+
+    protected void verifyBoxes(){
+        if(GameMap.MapInfos[CoordinateX][CoordinateY] instanceof SafeBox && Type == GameMap.MapInfos[CoordinateX][CoordinateY].type){
+            EnergyRegeneration();
+        }
+        else if(Type == GameMap.MapInfos[CoordinateX + 1][CoordinateY + 1].type || Type == GameMap.MapInfos[CoordinateX + 1][CoordinateY].type
+        || Type == GameMap.MapInfos[CoordinateX][CoordinateY + 1].type ||  Type == GameMap.MapInfos[CoordinateX - 1][CoordinateY - 1].type || Type == GameMap.MapInfos[CoordinateX - 1][CoordinateY].type
+        || Type == GameMap.MapInfos[CoordinateX][CoordinateY - 1].type || Type == GameMap.MapInfos[CoordinateX + 1][CoordinateY - 1].type
+        || Type == GameMap.MapInfos[CoordinateX - 1][CoordinateY + 1].type){
+            MessagesExchangeBetweenSameTypes();
+        }
+        else if(GameMap.MapInfos[CoordinateX + 1][CoordinateY + 1].isOccupied() || GameMap.MapInfos[CoordinateX + 1][CoordinateY].isOccupied()
+                || GameMap.MapInfos[CoordinateX][CoordinateY + 1].isOccupied() ||  GameMap.MapInfos[CoordinateX - 1][CoordinateY - 1].isOccupied()
+                || GameMap.MapInfos[CoordinateX - 1][CoordinateY].isOccupied() || GameMap.MapInfos[CoordinateX][CoordinateY - 1].isOccupied()
+                || GameMap.MapInfos[CoordinateX + 1][CoordinateY - 1].isOccupied() || GameMap.MapInfos[CoordinateX - 1][CoordinateY + 1].isOccupied()){
+            MessagesExchangeBetweenEnemies();
+        }
+        else if(!GameMap.MapInfos[CoordinateX + 1][CoordinateY + 1].isOccupied() || !GameMap.MapInfos[CoordinateX + 1][CoordinateY].isOccupied()
+                || !GameMap.MapInfos[CoordinateX][CoordinateY + 1].isOccupied() ||  !GameMap.MapInfos[CoordinateX - 1][CoordinateY - 1].isOccupied()
+                || !GameMap.MapInfos[CoordinateX - 1][CoordinateY].isOccupied() || !GameMap.MapInfos[CoordinateX][CoordinateY - 1].isOccupied()
+                || !GameMap.MapInfos[CoordinateX + 1][CoordinateY - 1].isOccupied() || !GameMap.MapInfos[CoordinateX - 1][CoordinateY + 1].isOccupied()){
+            return;
+        }
+        else{
+            MessagesExchangeBetweenAllies();
+        }
+    }
 
     public Map<String, Integer> getCoordinateXY() {
         Map<String, Integer> coordinatesXY = new HashMap<>();

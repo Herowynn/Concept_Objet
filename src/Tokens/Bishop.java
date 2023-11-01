@@ -7,7 +7,8 @@ import Enums.Types;
 
 public class Bishop extends Token {
 
-    public Bishop(Types type, String name) {
+    public Bishop(Mapping.Map map, Types type, String name) {
+        super(map);
         Type = type;
         Name = name;
         Random random = new Random();
@@ -67,61 +68,57 @@ public class Bishop extends Token {
     }
 
     public void Move() {
-        int mapLength = 100; // length of the map
-        int mapWidth = 50; // width of the map
-
         // Number of case to move
         int numberCaseMovement1 = this.generateRandomNumberOfCase();
 
         // Moving
         int i = 0;
-        while (this.CoordinateX < mapLength && i < Math.abs(numberCaseMovement1)) {
+        while (this.CoordinateX < GameMap.SizeX && i < Math.abs(numberCaseMovement1)) {
             i = i + 1;
             if (numberCaseMovement1 <= 0) {
-                this.CoordinateX = this.CoordinateX - i;
+                CoordinateX = CoordinateX - i;
 
             } else {
-                this.CoordinateX = this.CoordinateX + i;
+                CoordinateX = CoordinateX + i;
 
             }
-            System.out.println(this.CoordinateX);
-            this.CoordinateY = 0;
+            System.out.println(CoordinateX);
+            CoordinateY = 0;
 
         }
         // Number of case to move
-        int numberCaseMovement2 = this.generateRandomNumberOfCase();
+        int numberCaseMovement2 = generateRandomNumberOfCase();
 
         // Moving
         int j = 0;
-        while (this.CoordinateX < mapLength && i < Math.abs(numberCaseMovement2)) {
+        while (CoordinateX < GameMap.SizeX && i < Math.abs(numberCaseMovement2)) {
             i = i + 1;
             if (numberCaseMovement2 <= 0) {
-                this.CoordinateX = this.CoordinateX - j;
+                CoordinateX = CoordinateX - j;
 
             } else {
-                this.CoordinateX = this.CoordinateX + j;
+                CoordinateX = CoordinateX + j;
 
             }
-            System.out.println(this.CoordinateX);
-            this.CoordinateY = 0;
-
+            System.out.println(CoordinateX);
+            CoordinateY = 0;
         }
         // Loss of energy after the moving
 
-        this.EnergyLeft = this.EnergyLeft - ((numberCaseMovement1 + numberCaseMovement2) * this.MovementPrice);
-        this.EnergyLeft = Math.round(this.EnergyLeft * 10.0) / 10.0;
-        if (this.EnergyLeft < 0) {
-            this.EnergyLeft = 0;
+        EnergyLeft = EnergyLeft - ((numberCaseMovement1 + numberCaseMovement2) * MovementPrice);
+        EnergyLeft = Math.round(EnergyLeft * 10.0) / 10.0;
+        if (EnergyLeft < 0) {
+            EnergyLeft = 0;
         }
         // Saving of the last direction, which is East.
-        this.LastDirection = this.calculTheLastDirection(numberCaseMovement1, numberCaseMovement2);
-
+        LastDirection = calculTheLastDirection(numberCaseMovement1, numberCaseMovement2);
     }
 
     public void EnergyRegeneration() {
 
     }
 
+    @Override
     public void MessagesExchange() {
 
     }

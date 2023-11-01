@@ -1,10 +1,13 @@
 package Mapping;
 
+import Enums.Types;
+
 public class Box {
     public int CoordonateX;
     public int CoordonateY;
     private boolean obstacle;
     private boolean occupied;
+    public Types type;
 
     Box(int x, int y){
         CoordonateX = x;

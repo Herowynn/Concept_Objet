@@ -22,10 +22,23 @@ public class Main {
         rook1.getCoordinateXY();
         rook1.getEnergyLeft();*/
 
-        List<Token> tokens = new ArrayList<Token>();
-        Air AirMaster = Air.getInstance("AirMaster", myMap);
-        Fire FireMaster = Fire.getInstance("FireMaster", myMap);
-        Water WaterMaster = Water.getInstance("WaterMaster", myMap);
-        Earth EarthMaster = Earth.getInstance("EarthMaster", myMap);
+        List<Token> tokens;
+        List<Elemental> masters = new ArrayList<>();
+
+        Air AirMaster = Air.getInstance("AirMaster", myMap, 5);
+        Fire FireMaster = Fire.getInstance("FireMaster", myMap, 5);
+        Water WaterMaster = Water.getInstance("WaterMaster", myMap, 5);
+        Earth EarthMaster = Earth.getInstance("EarthMaster", myMap, 5);
+
+        masters.add(AirMaster);
+        masters.add(FireMaster);
+        masters.add(WaterMaster);
+        masters.add(EarthMaster);
+
+        SimulationManager.getInstance(masters);
+        tokens = SimulationManager.GetAllTokensFromMasters();
+        for (Token token : tokens) {
+            System.out.println(token.Name);
+        }
     }
 }

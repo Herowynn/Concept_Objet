@@ -7,7 +7,8 @@ import Enums.Types;
 
 public class Rook extends Token {
 
-    public Rook(Types Type, String name) {
+    public Rook(Mapping.Map map, Types Type, String name) {
+        super(map);
         this.Type = Type;
         this.Name = name;
         Random random = new Random();

@@ -7,7 +7,8 @@ import Enums.Types;
 
 public class Queen extends Token {
 
-    public Queen(Types type, String name) {
+    public Queen(Mapping.Map map, Types type, String name) {
+        super(map);
         Type = type;
         Name = name;
         Random random = new Random();
