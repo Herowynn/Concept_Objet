@@ -21,12 +21,20 @@ public abstract class Elemental {
     protected List<Token> ElementTokens = new ArrayList<Token>();
     protected Mapping.Map GameMap;
     protected MiniGamesManager miniGamesManager;
+    protected Types type;
+    protected Alliances alliance;
 
-    public Elemental(String name, Mapping.Map map, int nbOfTokens){
+    public Elemental(String name, Types type, Mapping.Map map, int nbOfTokens){
         Name = name;
+        this.type = type;
         NumberOfTokens = nbOfTokens;
         GameMap = map;
         miniGamesManager = MiniGamesManager.getInstance();
+
+        if(type == Types.AIR || type == Types.FEU)
+            alliance = Alliances.VENFLAMME;
+        else
+            alliance = Alliances.HYDRATERRE;
     }
 
     public void CollectMessages(String[] messagesToCollect){
@@ -37,45 +45,46 @@ public abstract class Elemental {
         }
     }
 
+    public Types getType(){
+        return type;
+    }
+
+    public Alliances getAlliance(){
+        return alliance;
+    }
+
+    public MiniGamesManager getMiniGamesManager(){
+        return miniGamesManager;
+    }
+
     public int NumberOfMessagesCollected(){
         return MessagesCollected.size();
     }
 
     protected void createTokens(Types type){
-        System.out.println("Création des tokens !");
-
-        for(int i = 0; i < PercentagesCreationToken.size(); i++){
-            System.out.println(PercentagesCreationToken.values().toArray()[i]);
-        }
-
-        ElementTokens.add(new Queen(GameMap, type, type.toString() + " Queen", this));
+        ElementTokens.add(new Queen(GameMap, type.toString() + " Queen", this));
 
         Random rand = new Random();
         int value;
 
         for(int i = 1; i < NumberOfTokens; i++){
             value = rand.nextInt(100);
-            System.out.println(value);
 
             if(value <= (int)PercentagesCreationToken.values().toArray()[0]){
-                ElementTokens.add(new Bishop(GameMap, type, type.toString() + " Bishop" + i, this));
-                System.out.println("J'ai créé un Bishop !");
+                ElementTokens.add(new Bishop(GameMap, type.toString() + " Bishop" + i, this));
             }
             else if(value <= (int)PercentagesCreationToken.values().toArray()[1]){
                 // Create type Knight
                 //ElementTokens.add(new Knight(type, type.toString() + " Knight" + i));
-                ElementTokens.add(new Queen(GameMap, type, type.toString() + " Knight" + i, this));
-                System.out.println("J'ai créé un Knight !");
+                ElementTokens.add(new Queen(GameMap, type.toString() + " Knight" + i, this));
             }
             else if(value <= (int)PercentagesCreationToken.values().toArray()[2]){
                 // Create type King
                 //ElementTokens.add(new King(type, type.toString() + " King" + i);
-                ElementTokens.add(new Queen(GameMap, type, type.toString() + " King" + i, this));
-                System.out.println("J'ai créé un King !");
+                ElementTokens.add(new Queen(GameMap, type.toString() + " King" + i, this));
             }
             else {
-                ElementTokens.add(new Rook(GameMap, type, type.toString() + " Rook" + i, this));
-                System.out.println("J'ai créé un Rook !");
+                ElementTokens.add(new Rook(GameMap, type.toString() + " Rook" + i, this));
             }
         }
     }

@@ -7,9 +7,8 @@ import Enums.*;
 
 public class Rook extends Token {
 
-    public Rook(Mapping.Map map, Types Type, String name, Elemental master) {
+    public Rook(Mapping.Map map, String name, Elemental master) {
         super(map, master);
-        this.Type = Type;
         this.Name = name;
         Random random = new Random();
         // All the Bishop are suppose to have the same Movement price intervals
@@ -115,6 +114,7 @@ public class Rook extends Token {
             // Saving of the last direction
             LastDirection = calculTheLastDirection(numberCaseMovement, 0);
 
+            super.Move();
         }
     }
 }

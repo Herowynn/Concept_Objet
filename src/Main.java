@@ -2,14 +2,14 @@
 // then press Enter. You can now see whitespace characters in your code.
 
 import Elements.*;
-import Mapping.*;
-
-
 import Enums.Types;
+import Mapping.*;
+import MiniGames.MiniGamesManager;
 import Tokens.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,10 +25,10 @@ public class Main {
         List<Token> tokens;
         List<Elemental> masters = new ArrayList<>();
 
-        Air AirMaster = Air.getInstance("AirMaster", myMap, 5);
-        Fire FireMaster = Fire.getInstance("FireMaster", myMap, 5);
-        Water WaterMaster = Water.getInstance("WaterMaster", myMap, 5);
-        Earth EarthMaster = Earth.getInstance("EarthMaster", myMap, 5);
+        Air AirMaster = Air.getInstance("AirMaster", Types.AIR, myMap, 5);
+        Fire FireMaster = Fire.getInstance("FireMaster", Types.FEU, myMap, 5);
+        Water WaterMaster = Water.getInstance("WaterMaster", Types.EAU, myMap, 5);
+        Earth EarthMaster = Earth.getInstance("EarthMaster", Types.TERRE, myMap, 5);
 
         masters.add(AirMaster);
         masters.add(FireMaster);
@@ -37,8 +37,15 @@ public class Main {
 
         SimulationManager.getInstance(masters);
         tokens = SimulationManager.GetAllTokensFromMasters();
-        for (Token token : tokens) {
+        /*for (Token token : tokens) {
             System.out.println(token.Name);
+        }*/
+
+        MiniGamesManager mGManager = new MiniGamesManager();
+        Random rand = new Random();
+
+        for(int i = 0; i < 10; i++){
+            System.out.println(mGManager.playMiniGame(tokens.get(rand.nextInt(tokens.size())), tokens.get(rand.nextInt(tokens.size()))).Name);
         }
     }
 }

@@ -1,8 +1,6 @@
 package Tokens;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import Elements.*;
 import Enums.*;
@@ -10,7 +8,8 @@ import Mapping.SafeBox;
 
 public abstract class Token {
     public Types Type;
-    public String[] KnownMessages;
+    protected Alliances alliance;
+    public List<String> KnownMessages = new ArrayList<>();
     public String Name;
     public double EnergyLeft;
     public double EnergyMax;
@@ -24,12 +23,14 @@ public abstract class Token {
     protected Elemental master;
 
     public void EnergyRegeneration(){
-
+        EnergyLeft = EnergyMax;
     }
 
     public Token(Mapping.Map map, Elemental master){
         GameMap = map;
         this.master = master;
+        Type = master.getType();
+        alliance = master.getAlliance();
     }
 
     public void Move(){
@@ -37,29 +38,20 @@ public abstract class Token {
     }
 
     protected void verifyBoxes(){
-        if(GameMap.MapInfos[CoordinateX][CoordinateY] instanceof SafeBox && Type == GameMap.MapInfos[CoordinateX][CoordinateY].type){
-            EnergyRegeneration();
-        }
-        else if(Type == GameMap.MapInfos[CoordinateX + 1][CoordinateY + 1].type || Type == GameMap.MapInfos[CoordinateX + 1][CoordinateY].type
-        || Type == GameMap.MapInfos[CoordinateX][CoordinateY + 1].type ||  Type == GameMap.MapInfos[CoordinateX - 1][CoordinateY - 1].type || Type == GameMap.MapInfos[CoordinateX - 1][CoordinateY].type
-        || Type == GameMap.MapInfos[CoordinateX][CoordinateY - 1].type || Type == GameMap.MapInfos[CoordinateX + 1][CoordinateY - 1].type
-        || Type == GameMap.MapInfos[CoordinateX - 1][CoordinateY + 1].type){
-            MessagesExchangeBetweenSameTypes();
-        }
-        else if(GameMap.MapInfos[CoordinateX + 1][CoordinateY + 1].isOccupied() || GameMap.MapInfos[CoordinateX + 1][CoordinateY].isOccupied()
-                || GameMap.MapInfos[CoordinateX][CoordinateY + 1].isOccupied() ||  GameMap.MapInfos[CoordinateX - 1][CoordinateY - 1].isOccupied()
-                || GameMap.MapInfos[CoordinateX - 1][CoordinateY].isOccupied() || GameMap.MapInfos[CoordinateX][CoordinateY - 1].isOccupied()
-                || GameMap.MapInfos[CoordinateX + 1][CoordinateY - 1].isOccupied() || GameMap.MapInfos[CoordinateX - 1][CoordinateY + 1].isOccupied()){
-            MessagesExchangeBetweenEnemies();
-        }
-        else if(!GameMap.MapInfos[CoordinateX + 1][CoordinateY + 1].isOccupied() || !GameMap.MapInfos[CoordinateX + 1][CoordinateY].isOccupied()
-                || !GameMap.MapInfos[CoordinateX][CoordinateY + 1].isOccupied() ||  !GameMap.MapInfos[CoordinateX - 1][CoordinateY - 1].isOccupied()
-                || !GameMap.MapInfos[CoordinateX - 1][CoordinateY].isOccupied() || !GameMap.MapInfos[CoordinateX][CoordinateY - 1].isOccupied()
-                || !GameMap.MapInfos[CoordinateX + 1][CoordinateY - 1].isOccupied() || !GameMap.MapInfos[CoordinateX - 1][CoordinateY + 1].isOccupied()){
-            return;
-        }
-        else{
-            MessagesExchangeBetweenAllies();
+        for(int x = -1; x <= 1; x++){
+            for(int y = -1; y <= 1; y++){
+                if(x != 0 && y != 0){
+                    if(Type == GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken().Type){
+                        MessagesExchangeBetweenSameTypes(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
+                    }
+                    else if(alliance == GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken().alliance){
+                        MessagesExchangeBetweenAllies(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
+                    }
+                    else if (GameMap.MapInfos[CoordinateX + x][CoordinateY - y].isOccupied()){
+                        MessagesExchangeBetweenEnemies(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
+                    }
+                }
+            }
         }
     }
 
@@ -143,14 +135,65 @@ public abstract class Token {
         return lastDirection;
     }
 
-    public void MessagesExchangeBetweenAllies(){
+    public void MessageExchangeWithLoser(int numberOfMessages, Token sender, Token receiver){
+        Random rand = new Random();
+        String messageToExchange;
 
+        for(int i = 0; i < numberOfMessages; i++){
+            messageToExchange = sender.KnownMessages.get(rand.nextInt(sender.KnownMessages.size()));
+
+            while(receiver.KnownMessages.contains(messageToExchange)) {
+                messageToExchange = sender.KnownMessages.get(rand.nextInt(sender.KnownMessages.size()));
+            }
+
+            receiver.KnownMessages.add(messageToExchange);
+            sender.KnownMessages.remove(messageToExchange);
+        }
     }
-    public void MessagesExchangeBetweenSameTypes(){
 
+    public void MessagesExchangeBetweenAllies(Token otherPlayer){
+        Random rand = new Random();
+        int value;
+
+        for(int i = 0; i < 2; i++){
+            value = rand.nextInt(KnownMessages.size());
+
+            while(otherPlayer.KnownMessages.contains(KnownMessages.get(value)))
+                value = rand.nextInt(KnownMessages.size());
+
+            otherPlayer.KnownMessages.add(KnownMessages.get(value));
+        }
+
+        for(int i = 0; i < 5; i++){
+            value = rand.nextInt(KnownMessages.size());
+
+            while(KnownMessages.contains(otherPlayer.KnownMessages.get(value)))
+                value = rand.nextInt(KnownMessages.size());
+
+            KnownMessages.add(otherPlayer.KnownMessages.get(value));
+        }
     }
-    public void MessagesExchangeBetweenEnemies(){
 
+    public void MessagesExchangeBetweenSameTypes(Token otherPlayer){
+        for(int i = 0; i < KnownMessages.size() - 1; i++){
+            if(otherPlayer.KnownMessages.contains(KnownMessages.get(i)))
+                otherPlayer.KnownMessages.add(KnownMessages.get(i));
+        }
+
+        for(int i = 0; i < otherPlayer.KnownMessages.size() - 1; i++){
+            if(KnownMessages.contains(otherPlayer.KnownMessages.get(i)))
+                KnownMessages.add(otherPlayer.KnownMessages.get(i));
+        }
+    }
+
+    public void MessagesExchangeBetweenEnemies(Token otherPlayer){
+        Token loser;
+        loser = master.getMiniGamesManager().playMiniGame(this, otherPlayer);
+
+        if(loser == this)
+            MessageExchangeWithLoser(3, this, otherPlayer);
+        else
+            MessageExchangeWithLoser(3, otherPlayer, this);
     }
 
 }

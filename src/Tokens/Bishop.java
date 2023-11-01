@@ -6,10 +6,8 @@ import Enums.*;
 import Elements.*;
 
 public class Bishop extends Token {
-
-    public Bishop(Mapping.Map map, Types type, String name, Elemental master) {
+    public Bishop(Mapping.Map map, String name, Elemental master) {
         super(map, master);
-        Type = type;
         Name = name;
         Random random = new Random();
         // All the Bishop are suppose to have the same Movement price intervals
@@ -24,56 +22,57 @@ public class Bishop extends Token {
 
         switch (Type) {
             case AIR:
-                this.EnergyMax = 50;
-                this.MaxMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
-                this.MinMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
+                EnergyMax = 50;
+                MaxMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
+                MinMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
                 // Generate a random double in this intervale [ 80% of 1.0 and 80% of 3.0] for
                 // the Movement price
-                this.MovementPrice = this.MinMovementPrice
-                        + (random.nextDouble() * (this.MaxMovementPrice - this.MinMovementPrice));
+                MovementPrice = MinMovementPrice
+                        + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
                 break;
 
             case TERRE:
-                this.EnergyMax = 40;
-                this.MaxMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
-                this.MinMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
+                EnergyMax = 40;
+                MaxMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
+                MinMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
 
                 // Generate a random double in this intervale [ 80% of 1.0 and 80% of 3.0] for
                 // the Movement price
-                this.MovementPrice = this.MinMovementPrice
-                        + (random.nextDouble() * (this.MaxMovementPrice - this.MinMovementPrice));
+                MovementPrice = MinMovementPrice
+                        + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
                 break;
 
             case EAU:
-                this.EnergyMax = 35;
-                this.MaxMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
-                this.MinMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
+                EnergyMax = 35;
+                MaxMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
+                MinMovementPrice = MaxMovementPrice * percentageMovementPriceHydraterre;
                 // Generate a random double in this intervale [ 65% of 1.0 and 65% of 3.0] for
                 // the Movement price
-                this.MovementPrice = this.MinMovementPrice
-                        + (random.nextDouble() * (this.MaxMovementPrice - this.MinMovementPrice));
+                MovementPrice = MinMovementPrice
+                        + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
                 break;
 
             case FEU:
-                this.EnergyMax = 45;
-                this.MaxMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
-                this.MinMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
+                EnergyMax = 45;
+                MaxMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
+                MinMovementPrice = MaxMovementPrice * percentageMovementPriceVenflamme;
                 // Generate a random double in this intervale [ 65% of 1.0 and 65% of 3.0] for
                 // the Movement price
-                this.MovementPrice = this.MinMovementPrice
-                        + (random.nextDouble() * (this.MaxMovementPrice - this.MinMovementPrice));
+                MovementPrice = MinMovementPrice
+                        + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
                 break;
 
         }
     }
 
+    @Override
     public void Move() {
         // Number of case to move
-        int numberCaseMovement1 = this.generateRandomNumberOfCase();
+        int numberCaseMovement1 = generateRandomNumberOfCase();
 
         // Moving
         int i = 0;
-        while (this.CoordinateX < GameMap.SizeX && i < Math.abs(numberCaseMovement1)) {
+        while (CoordinateX < GameMap.SizeX && i < Math.abs(numberCaseMovement1)) {
             i = i + 1;
             if (numberCaseMovement1 <= 0) {
                 CoordinateX = CoordinateX - i;
@@ -112,5 +111,6 @@ public class Bishop extends Token {
         }
         // Saving of the last direction, which is East.
         LastDirection = calculTheLastDirection(numberCaseMovement1, numberCaseMovement2);
+        super.Move();
     }
 }

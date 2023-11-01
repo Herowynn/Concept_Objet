@@ -1,2 +1,6 @@
-package Enums;public enum Alliances {
+package Enums;
+
+public enum Alliances {
+    VENFLAMME,
+    HYDRATERRE
 }

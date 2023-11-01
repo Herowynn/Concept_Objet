@@ -1,26 +1,28 @@
 package Mapping;
-
-import Enums.Types;
+import Tokens.*;
 
 public class Box {
     public int CoordonateX;
     public int CoordonateY;
     private boolean obstacle;
     private boolean occupied;
-    public Types type;
+    protected Token token;
 
     Box(int x, int y){
         CoordonateX = x;
         CoordonateY = y;
         obstacle = false;
+        occupied = false;
+        token = null;
     }
 
     public void setObstacle(){
         obstacle = true;
     }
 
-    public void setOccupied(boolean value){
+    public void setOccupied(boolean value, Token token){
         occupied = value;
+        this.token = token;
     }
 
     public boolean isBlockedByObstacle(){
@@ -29,5 +31,9 @@ public class Box {
 
     public boolean isOccupied(){
         return occupied;
+    }
+
+    public Token getToken(){
+        return token;
     }
 }

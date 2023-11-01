@@ -7,9 +7,8 @@ import Enums.*;
 
 public class Queen extends Token {
 
-    public Queen(Mapping.Map map, Types type, String name, Elemental master) {
+    public Queen(Mapping.Map map, String name, Elemental master) {
         super(map, master);
-        Type = type;
         Name = name;
         Random random = new Random();
         // All the Queen are supposed to have the same Movement price intervals
@@ -73,7 +72,6 @@ public class Queen extends Token {
 
     @Override
     public void Move() {
-
         int mapLength = 100; // length of the map
         int mapWidth = 50; // width of the map
         Random random = new Random();
@@ -90,21 +88,21 @@ public class Queen extends Token {
         int i = 1;
         int orientation1 = orientations[random.nextInt(2)];
         int orientation2 = orientations[random.nextInt(2)];
-        while (this.CoordinateX < mapLength && this.CoordinateY < mapWidth && i <= Math.abs(numberCaseMovement)) {
+        while (CoordinateX < mapLength && CoordinateY < mapWidth && i <= Math.abs(numberCaseMovement)) {
 
-            this.CoordinateX = this.CoordinateX + orientation1 * i;
+            CoordinateX = CoordinateX + orientation1 * i;
 
-            this.CoordinateY = this.CoordinateY + orientation2 * i;
-            System.out.println(this.CoordinateX);
-            System.out.println(this.CoordinateY);
+            CoordinateY = CoordinateY + orientation2 * i;
+            System.out.println(CoordinateX);
+            System.out.println(CoordinateY);
             i = i + 1;
         }
 
-        this.EnergyLeft = this.EnergyLeft - (numberCaseMovement * this.MovementPrice);
-        this.EnergyLeft = Math.round(this.EnergyLeft * 10.0) / 10.0;
+        EnergyLeft = EnergyLeft - (numberCaseMovement * MovementPrice);
+        EnergyLeft = Math.round(EnergyLeft * 10.0) / 10.0;
         // Saving of the last direction
-        this.LastDirection = this.calculTheLastDirection(orientation1 * numberCaseMovement,
+        LastDirection = calculTheLastDirection(orientation1 * numberCaseMovement,
                 orientation2 * numberCaseMovement);
-
+        super.Move();
     }
 }
