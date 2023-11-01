@@ -2,13 +2,13 @@ package Tokens;
 
 import java.util.Random;
 
-import Enums.Directions;
-import Enums.Types;
+import Elements.*;
+import Enums.*;
 
 public class Rook extends Token {
 
-    public Rook(Mapping.Map map, Types Type, String name) {
-        super(map);
+    public Rook(Mapping.Map map, Types Type, String name, Elemental master) {
+        super(map, master);
         this.Type = Type;
         this.Name = name;
         Random random = new Random();
@@ -116,15 +116,5 @@ public class Rook extends Token {
             LastDirection = calculTheLastDirection(numberCaseMovement, 0);
 
         }
-    }
-
-    @Override
-    public void EnergyRegeneration() {
-
-    }
-
-    @Override
-    public void MessagesExchange() {
-
     }
 }

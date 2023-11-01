@@ -2,13 +2,13 @@ package Tokens;
 
 import java.util.Random;
 
-import Enums.Directions;
-import Enums.Types;
+import Elements.*;
+import Enums.*;
 
 public class Queen extends Token {
 
-    public Queen(Mapping.Map map, Types type, String name) {
-        super(map);
+    public Queen(Mapping.Map map, Types type, String name, Elemental master) {
+        super(map, master);
         Type = type;
         Name = name;
         Random random = new Random();
@@ -105,16 +105,6 @@ public class Queen extends Token {
         // Saving of the last direction
         this.LastDirection = this.calculTheLastDirection(orientation1 * numberCaseMovement,
                 orientation2 * numberCaseMovement);
-
-    }
-
-    @Override
-    public void EnergyRegeneration() {
-
-    }
-
-    @Override
-    public void MessagesExchange() {
 
     }
 }

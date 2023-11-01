@@ -2,13 +2,13 @@ package Tokens;
 
 import java.util.Random;
 
-import Enums.Directions;
-import Enums.Types;
+import Enums.*;
+import Elements.*;
 
 public class Bishop extends Token {
 
-    public Bishop(Mapping.Map map, Types type, String name) {
-        super(map);
+    public Bishop(Mapping.Map map, Types type, String name, Elemental master) {
+        super(map, master);
         Type = type;
         Name = name;
         Random random = new Random();
@@ -112,14 +112,5 @@ public class Bishop extends Token {
         }
         // Saving of the last direction, which is East.
         LastDirection = calculTheLastDirection(numberCaseMovement1, numberCaseMovement2);
-    }
-
-    public void EnergyRegeneration() {
-
-    }
-
-    @Override
-    public void MessagesExchange() {
-
     }
 }

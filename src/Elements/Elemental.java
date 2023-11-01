@@ -1,6 +1,7 @@
 package Elements;
 
 import Enums.*;
+import MiniGames.*;
 import Tokens.*;
 import Mapping.*;
 
@@ -19,11 +20,13 @@ public abstract class Elemental {
     protected HashMap<String, Integer> PercentagesCreationToken = new HashMap<String, Integer>();
     protected List<Token> ElementTokens = new ArrayList<Token>();
     protected Mapping.Map GameMap;
+    protected MiniGamesManager miniGamesManager;
 
     public Elemental(String name, Mapping.Map map, int nbOfTokens){
         Name = name;
         NumberOfTokens = nbOfTokens;
         GameMap = map;
+        miniGamesManager = MiniGamesManager.getInstance();
     }
 
     public void CollectMessages(String[] messagesToCollect){
@@ -45,7 +48,7 @@ public abstract class Elemental {
             System.out.println(PercentagesCreationToken.values().toArray()[i]);
         }
 
-        ElementTokens.add(new Queen(GameMap, type, type.toString() + " Queen"));
+        ElementTokens.add(new Queen(GameMap, type, type.toString() + " Queen", this));
 
         Random rand = new Random();
         int value;
@@ -55,23 +58,23 @@ public abstract class Elemental {
             System.out.println(value);
 
             if(value <= (int)PercentagesCreationToken.values().toArray()[0]){
-                ElementTokens.add(new Bishop(GameMap, type, type.toString() + " Bishop" + i));
+                ElementTokens.add(new Bishop(GameMap, type, type.toString() + " Bishop" + i, this));
                 System.out.println("J'ai créé un Bishop !");
             }
             else if(value <= (int)PercentagesCreationToken.values().toArray()[1]){
                 // Create type Knight
                 //ElementTokens.add(new Knight(type, type.toString() + " Knight" + i));
-                ElementTokens.add(new Queen(GameMap, type, type.toString() + " Knight" + i));
+                ElementTokens.add(new Queen(GameMap, type, type.toString() + " Knight" + i, this));
                 System.out.println("J'ai créé un Knight !");
             }
             else if(value <= (int)PercentagesCreationToken.values().toArray()[2]){
                 // Create type King
                 //ElementTokens.add(new King(type, type.toString() + " King" + i);
-                ElementTokens.add(new Queen(GameMap, type, type.toString() + " King" + i));
+                ElementTokens.add(new Queen(GameMap, type, type.toString() + " King" + i, this));
                 System.out.println("J'ai créé un King !");
             }
             else {
-                ElementTokens.add(new Rook(GameMap, type, type.toString() + " Rook" + i));
+                ElementTokens.add(new Rook(GameMap, type, type.toString() + " Rook" + i, this));
                 System.out.println("J'ai créé un Rook !");
             }
         }

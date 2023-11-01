@@ -3,6 +3,8 @@ package Tokens;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import Elements.*;
 import Enums.*;
 import Mapping.SafeBox;
 
@@ -19,15 +21,15 @@ public abstract class Token {
     public int CoordinateY;
     public Directions LastDirection;
     protected Mapping.Map GameMap;
+    protected Elemental master;
 
-    abstract public void EnergyRegeneration();
+    public void EnergyRegeneration(){
 
-    abstract public void MessagesExchangeBetweenAllies();
-    abstract public void MessagesExchangeBetweenSameTypes();
-    abstract public void MessagesExchangeBetweenEnemies();
+    }
 
-    public Token(Mapping.Map map){
+    public Token(Mapping.Map map, Elemental master){
         GameMap = map;
+        this.master = master;
     }
 
     public void Move(){
@@ -139,6 +141,15 @@ public abstract class Token {
         }
 
         return lastDirection;
+    }
+
+    public void MessagesExchangeBetweenAllies(){
+
+    }
+    public void MessagesExchangeBetweenSameTypes(){
+
+    }
+    public void MessagesExchangeBetweenEnemies(){
 
     }
 
