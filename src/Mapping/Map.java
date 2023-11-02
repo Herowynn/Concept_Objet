@@ -1,7 +1,10 @@
 package Mapping;
 
 import java.util.Random;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
+import Enums.Directions;
 import Enums.Types;
 
 public class Map {
@@ -114,13 +117,47 @@ public class Map {
         }
     }
 
-    public Box[] availableTiles(int coordonateX, int coordonateY) {
-        Box[] availableTiles = new Box[8];
+    private Directions getDirection(int baseX, int baseY, int newX, int newY){
+        if(baseX > newX){
+            if(baseY > newY){
+                return Directions.NW;
+            }
+            else if(baseY == newY){
+                return Directions.N;
+            }
+            else{
+                return Directions.NE;
+            }
+        }
+        else if(baseX == newX){
+            if(baseY > newY){
+                return Directions.W;
+            }
+            else if(baseY < newY){
+                return Directions.E; 
+            }
+        }
+        else if(baseX < newX){
+            if(baseY > newY){
+                return Directions.SW;
+            }
+            else if(baseY == newY){
+                return Directions.S;
+            }
+            else{
+                return Directions.SE;
+            }
+        }
+        return null;
+    }
+
+    public Dictionary<Box, Directions> availableTiles(int coordonateX, int coordonateY) {
+        Dictionary<Box, Directions> availableTiles = new Hashtable<>();
         for (int x = coordonateX - 1; x <= coordonateX + 1; x++) {
             for (int y = coordonateY - 1; y <= coordonateY + 1; y++) {
                 if (x != -1 && y != -1 && x != SizeX && y != SizeY) {
-                    if (!MapInfos[x][y].isBlockedByObstacle()) {
-                        availableTiles[availableTiles.length] = MapInfos[x][y];
+                    if (!MapInfos[x][y].isBlockedByObstacle() && (x != coordonateX && y != coordonateY)) {
+                        availableTiles.put(MapInfos[x][y], getDirection(coordonateX, coordonateY, x, y));
                     }
                 }
             }
