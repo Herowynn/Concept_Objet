@@ -8,8 +8,7 @@ import Enums.*;
 public class Queen extends Token {
 
     public Queen(Mapping.Map map, String name, Elemental master) {
-        super(map, master);
-        Name = name;
+        super(map, name, master);
         Random random = new Random();
         // All the Queen are supposed to have the same Movement price intervals
         this.MaxMovementPrice = 2.0;

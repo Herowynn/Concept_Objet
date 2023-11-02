@@ -8,8 +8,7 @@ import Enums.*;
 public class Rook extends Token {
 
     public Rook(Mapping.Map map, String name, Elemental master) {
-        super(map, master);
-        this.Name = name;
+        super(map, name, master);
         Random random = new Random();
         // All the Bishop are suppose to have the same Movement price intervals
         this.MaxMovementPrice = 6.0;

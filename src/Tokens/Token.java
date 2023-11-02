@@ -26,11 +26,12 @@ public abstract class Token {
         EnergyLeft = EnergyMax;
     }
 
-    public Token(Mapping.Map map, Elemental master){
+    public Token(Mapping.Map map, String name, Elemental master){
         GameMap = map;
         this.master = master;
         Type = master.getType();
         alliance = master.getAlliance();
+        Name = name;
     }
 
     public void Move(){
