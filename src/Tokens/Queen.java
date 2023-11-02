@@ -70,38 +70,71 @@ public class Queen extends Token {
     }
 
     @Override
-    public void Move() {
-        int mapLength = 100; // length of the map
-        int mapWidth = 50; // width of the map
-        Random random = new Random();
-        int[] orientations = { -1, 1 };
+    public void MoveToFindMessages() {
 
-        // Utilisez l'indice pour sélectionner le chiffre correspondant dans le tableau
+        Random random = new Random();
+
+        // List of all the direction the token could choose
+        Directions[] orientation = { Directions.E, Directions.N, Directions.NE, Directions.NW, Directions.S,
+                Directions.SE, Directions.SW, Directions.W };
+
+        // Saving of the llast direction
+        LastDirection = orientation[random.nextInt(orientation.length)];
 
         // Number of case to move, random umber between 0 and 5 inclusive
         int numberCaseMovement = random.nextInt(6);
         System.out.println("random number" + numberCaseMovement);
-
-        // diagonal moves for the queen
-
         int i = 1;
-        int orientation1 = orientations[random.nextInt(2)];
-        int orientation2 = orientations[random.nextInt(2)];
-        while (CoordinateX < mapLength && CoordinateY < mapWidth && i <= Math.abs(numberCaseMovement)) {
+        while (CoordinateX < GameMap.SizeX && CoordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
+                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupied()) {
+            switch (LastDirection) {
+                case E:
+                    CoordinateX = CoordinateX + i;
+                    CoordinateY = CoordinateY;
+                    break;
 
-            CoordinateX = CoordinateX + orientation1 * i;
+                case N:
+                    CoordinateY = CoordinateY + i;
+                    CoordinateX = CoordinateX;
+                    break;
 
-            CoordinateY = CoordinateY + orientation2 * i;
-            System.out.println(CoordinateX);
-            System.out.println(CoordinateY);
-            i = i + 1;
+                case S:
+                    CoordinateY = CoordinateY - i;
+                    CoordinateX = CoordinateX;
+                    break;
+
+                case W:
+                    CoordinateX = CoordinateX - i;
+                    CoordinateY = CoordinateY;
+                    break;
+
+                case SE:
+                    CoordinateX = CoordinateX + i;
+                    CoordinateY = CoordinateY - i;
+                    break;
+
+                case SW:
+                    CoordinateX = CoordinateX - i;
+                    CoordinateY = CoordinateY;
+                    break;
+
+                case NE:
+                    CoordinateX = CoordinateX + i;
+                    CoordinateY = CoordinateY + i;
+                    break;
+
+                case NW:
+                    CoordinateX = CoordinateX + i;
+                    CoordinateY = CoordinateY - i;
+                    break;
+
+            }
+            i++;
+
         }
-
         EnergyLeft = EnergyLeft - (numberCaseMovement * MovementPrice);
         EnergyLeft = Math.round(EnergyLeft * 10.0) / 10.0;
-        // Saving of the last direction
-        LastDirection = calculTheLastDirection(orientation1 * numberCaseMovement,
-                orientation2 * numberCaseMovement);
-        super.Move();
+
+        super.MoveToFindMessages();
     }
 }
