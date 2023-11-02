@@ -5,14 +5,16 @@ public class Box {
     public int CoordonateX;
     public int CoordonateY;
     private boolean obstacle;
-    private boolean occupied;
+    private boolean occupiedByToken;
+    protected boolean occupiedByMaster;
     protected Token token;
 
     Box(int x, int y){
         CoordonateX = x;
         CoordonateY = y;
         obstacle = false;
-        occupied = false;
+        occupiedByToken = false;
+        occupiedByMaster = false;
         token = null;
     }
 
@@ -21,7 +23,7 @@ public class Box {
     }
 
     public void setOccupied(boolean value, Token token){
-        occupied = value;
+        occupiedByToken = value;
         this.token = token;
     }
 
@@ -29,11 +31,15 @@ public class Box {
         return obstacle;
     }
 
-    public boolean isOccupied(){
-        return occupied;
+    public boolean isOccupiedByToken(){
+        return occupiedByToken;
     }
 
     public Token getToken(){
         return token;
+    }
+
+    public boolean isOcccupiedByMaster(){
+        return occupiedByMaster;
     }
 }

@@ -91,26 +91,22 @@ public class Rook extends Token {
         System.out.println("random number" + numberCaseMovement);
         int i = 1;
         while (CoordinateX < GameMap.SizeX && CoordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
-                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupied()) {
+                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupiedByToken()) {
             switch (LastDirection) {
                 case E:
                     CoordinateX = CoordinateX + i;
-                    CoordinateY = CoordinateY;
                     break;
 
                 case N:
                     CoordinateY = CoordinateY + i;
-                    CoordinateX = CoordinateX;
                     break;
 
                 case S:
                     CoordinateY = CoordinateY - i;
-                    CoordinateX = CoordinateX;
                     break;
 
                 case W:
                     CoordinateX = CoordinateX - i;
-                    CoordinateY = CoordinateY;
                     break;
 
             }

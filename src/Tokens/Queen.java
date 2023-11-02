@@ -86,26 +86,22 @@ public class Queen extends Token {
         System.out.println("random number" + numberCaseMovement);
         int i = 1;
         while (CoordinateX < GameMap.SizeX && CoordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
-                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupied()) {
+                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupiedByToken()) {
             switch (LastDirection) {
                 case E:
                     CoordinateX = CoordinateX + i;
-                    CoordinateY = CoordinateY;
-                    break;
-
-                case N:
-                    CoordinateY = CoordinateY + i;
-                    CoordinateX = CoordinateX;
-                    break;
-
-                case S:
-                    CoordinateY = CoordinateY - i;
-                    CoordinateX = CoordinateX;
                     break;
 
                 case W:
                     CoordinateX = CoordinateX - i;
-                    CoordinateY = CoordinateY;
+                    break;
+
+                case N:
+                    CoordinateY = CoordinateY + i;
+                    break;
+
+                case S:
+                    CoordinateY = CoordinateY - i;
                     break;
 
                 case SE:
@@ -115,7 +111,7 @@ public class Queen extends Token {
 
                 case SW:
                     CoordinateX = CoordinateX - i;
-                    CoordinateY = CoordinateY;
+                    CoordinateY = CoordinateY - i;
                     break;
 
                 case NE:
@@ -124,8 +120,8 @@ public class Queen extends Token {
                     break;
 
                 case NW:
-                    CoordinateX = CoordinateX + i;
-                    CoordinateY = CoordinateY - i;
+                    CoordinateX = CoordinateX - i;
+                    CoordinateY = CoordinateY + i;
                     break;
 
             }

@@ -81,7 +81,7 @@ public class Bishop extends Token {
         System.out.println("random number" + numberCaseMovement);
         int i = 1;
         while (CoordinateX < GameMap.SizeX && CoordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
-                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupied()) {
+                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupiedByToken()) {
             switch (LastDirection) {
 
                 case SE:
@@ -91,7 +91,7 @@ public class Bishop extends Token {
 
                 case SW:
                     CoordinateX = CoordinateX - i;
-                    CoordinateY = CoordinateY;
+                    CoordinateY = CoordinateY - i;
                     break;
 
                 case NE:
@@ -100,8 +100,8 @@ public class Bishop extends Token {
                     break;
 
                 case NW:
-                    CoordinateX = CoordinateX + i;
-                    CoordinateY = CoordinateY - i;
+                    CoordinateX = CoordinateX - i;
+                    CoordinateY = CoordinateY + i;
                     break;
 
             }

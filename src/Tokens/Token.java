@@ -4,7 +4,6 @@ import java.util.*;
 
 import Elements.*;
 import Enums.*;
-import Mapping.SafeBox;
 
 public abstract class Token {
     public Types Type;
@@ -59,7 +58,7 @@ public abstract class Token {
                         MessagesExchangeBetweenSameTypes(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
                     } else if (alliance == GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken().alliance) {
                         MessagesExchangeBetweenAllies(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
-                    } else if (GameMap.MapInfos[CoordinateX + x][CoordinateY - y].isOccupied()) {
+                    } else if (GameMap.MapInfos[CoordinateX + x][CoordinateY - y].isOccupiedByToken()) {
                         MessagesExchangeBetweenEnemies(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
                     }
                 }

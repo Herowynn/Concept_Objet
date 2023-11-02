@@ -1,9 +1,11 @@
 package Mapping;
 
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import Elements.Elemental;
 import Enums.Directions;
 import Enums.Types;
 
@@ -47,11 +49,11 @@ public class Map {
 
     private void obstacleGeneration() {
         Random r = new Random();
-        int int_random = r.nextInt((SizeX * SizeY) / 25); 
-        for(int obstacle = 0; obstacle < int_random; obstacle++){
+        int int_random = r.nextInt((SizeX * SizeY) / 25);
+        for (int obstacle = 0; obstacle < int_random; obstacle++) {
             int coordonateX_random = r.nextInt(SizeX);
             int coordonateY_random = r.nextInt(SizeY);
-            while(MapInfos[coordonateX_random][coordonateY_random].getClass() == SafeBox.class || MapInfos[coordonateX_random][coordonateY_random].isBlockedByObstacle()){
+            while (MapInfos[coordonateX_random][coordonateY_random].getClass() == SafeBox.class || MapInfos[coordonateX_random][coordonateY_random].isBlockedByObstacle()) {
                 coordonateX_random = r.nextInt(SizeX);
                 coordonateY_random = r.nextInt(SizeY);
             }
@@ -97,7 +99,28 @@ public class Map {
                 } else if (MapInfos[x][y].isBlockedByObstacle()) {
                     System.out.print("/");
 
-                } else {
+                } else if(MapInfos[x][y].isOcccupiedByMaster()){
+                    System.out.println("Je fais un test !");
+                    switch (((SafeBox) MapInfos[x][y]).getMaster().getType()) {
+                        case FEU:
+//                            System.out.print(ANSI_RED_BACKGROUND + "M" + ANSI_RESET);
+                            System.out.println("M");
+                            break;
+                        case EAU:
+//                            System.out.print(ANSI_BLUE_BACKGROUND + "M" + ANSI_RESET);
+                            System.out.println("M");
+                            break;
+                        case AIR:
+                            System.out.println("M");
+//                            System.out.print(ANSI_PURPLE_BACKGROUND + "M" + ANSI_RESET);
+                            break;
+                        case TERRE:
+                            System.out.println("M");
+//                            System.out.print(ANSI_GREEN_BACKGROUND + "M" + ANSI_RESET);
+                            break;
+                    }
+                }
+                else {
                     System.out.print(" ");
                 }
 
@@ -117,34 +140,27 @@ public class Map {
         }
     }
 
-    private Directions getDirection(int baseX, int baseY, int newX, int newY){
-        if(baseX > newX){
-            if(baseY > newY){
+    private Directions getDirection(int baseX, int baseY, int newX, int newY) {
+        if (baseX > newX) {
+            if (baseY > newY) {
                 return Directions.NW;
-            }
-            else if(baseY == newY){
+            } else if (baseY == newY) {
                 return Directions.N;
-            }
-            else{
+            } else {
                 return Directions.NE;
             }
-        }
-        else if(baseX == newX){
-            if(baseY > newY){
+        } else if (baseX == newX) {
+            if (baseY > newY) {
                 return Directions.W;
+            } else if (baseY < newY) {
+                return Directions.E;
             }
-            else if(baseY < newY){
-                return Directions.E; 
-            }
-        }
-        else if(baseX < newX){
-            if(baseY > newY){
+        } else if (baseX < newX) {
+            if (baseY > newY) {
                 return Directions.SW;
-            }
-            else if(baseY == newY){
+            } else if (baseY == newY) {
                 return Directions.S;
-            }
-            else{
+            } else {
                 return Directions.SE;
             }
         }
@@ -163,5 +179,25 @@ public class Map {
             }
         }
         return availableTiles;
+    }
+
+    public HashSet<String> getBoxesFromMySafeZone(Types type) {
+        HashSet<String> safeZone = new HashSet<>();
+        String values;
+
+        for (int i = 0; i < MapInfos.length; i++) {
+            for (int j = 0; j < MapInfos[0].length; j++){
+                if(MapInfos[i][j] instanceof SafeBox && ((SafeBox) MapInfos[i][j]).getType() == type){
+                    values = i + "," + j;
+                    safeZone.add(values);
+                }
+            }
+        }
+
+        return safeZone;
+    }
+
+    public void setMaster(int coordinateX, int coordinateY, Elemental master) {
+        ((SafeBox) MapInfos[coordinateX][coordinateY]).setMaster(master);
     }
 }

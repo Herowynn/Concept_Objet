@@ -14,7 +14,6 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         Map myMap = new Map(51, 14);
-        myMap.printMap();
 
         /*Queen rook1 = new Queen(Types.AIR, "Léonard");
         rook1.getCoordinateXY();
@@ -41,11 +40,27 @@ public class Main {
             System.out.println(token.Name);
         }*/
 
-        MiniGamesManager mGManager = new MiniGamesManager();
+        /*MiniGamesManager mGManager = new MiniGamesManager();
         Random rand = new Random();
 
         for(int i = 0; i < 10; i++){
             System.out.println(mGManager.playMiniGame(tokens.get(rand.nextInt(tokens.size())), tokens.get(rand.nextInt(tokens.size()))).Name);
+        }*/
+
+        /*for(Elemental master : masters){
+            master.getCoordinates();
+        }*/
+
+
+        for (Box[] boxTab : myMap.MapInfos){
+            for(Box box : boxTab){
+                if(box.isOcccupiedByMaster())
+                    System.out.println(box.isOcccupiedByMaster());
+            }
         }
+
+        myMap.printMap();
+
+
     }
 }
