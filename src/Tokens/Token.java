@@ -22,32 +22,43 @@ public abstract class Token {
     protected Mapping.Map GameMap;
     protected Elemental master;
 
-    public void EnergyRegeneration(){
+    public void EnergyRegeneration() {
         EnergyLeft = EnergyMax;
     }
 
-    public Token(Mapping.Map map, Elemental master){
+    public Token(Mapping.Map map, Elemental master) {
         GameMap = map;
         this.master = master;
         Type = master.getType();
         alliance = master.getAlliance();
     }
 
-    public void Move(){
+    public void MoveToFindMessages() {
         verifyBoxes();
     }
 
-    protected void verifyBoxes(){
-        for(int x = -1; x <= 1; x++){
-            for(int y = -1; y <= 1; y++){
-                if(x != 0 && y != 0){
-                    if(Type == GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken().Type){
+    public void Move() {
+        if (this.EnergyLeft >= 0.20 * EnergyMax) {
+            MoveToFindMessages();
+
+        } else if (this.EnergyLeft == 0) {
+            // If the token does not have enough energy, it becomes an obstacle
+            GameMap.MapInfos[CoordinateX][CoordinateY].setObstacle();
+            GameMap.MapInfos[CoordinateX][CoordinateY].setOccupied(true, this);
+
+        }
+    }
+
+    // Check if there is another player around for the message exchange
+    protected void verifyBoxes() {
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                if (x != 0 && y != 0) {
+                    if (Type == GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken().Type) {
                         MessagesExchangeBetweenSameTypes(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
-                    }
-                    else if(alliance == GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken().alliance){
+                    } else if (alliance == GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken().alliance) {
                         MessagesExchangeBetweenAllies(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
-                    }
-                    else if (GameMap.MapInfos[CoordinateX + x][CoordinateY - y].isOccupied()){
+                    } else if (GameMap.MapInfos[CoordinateX + x][CoordinateY - y].isOccupied()) {
                         MessagesExchangeBetweenEnemies(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
                     }
                 }
@@ -100,7 +111,8 @@ public abstract class Token {
 
     // This method calcul the last direction of the token according to the
     // coordinates of moving
-    // coordinatesX et coordinatesY are the coordinates the token will take at his future move
+    // coordinatesX et coordinatesY are the coordinates the token will take at his
+    // future move
     public Directions calculTheLastDirection(int coordinateX, int coordinateY) {
         Directions lastDirection;
         if (coordinateX > 0 && coordinateY > 0) {
@@ -135,14 +147,14 @@ public abstract class Token {
         return lastDirection;
     }
 
-    public void MessageExchangeWithLoser(int numberOfMessages, Token sender, Token receiver){
+    public void MessageExchangeWithLoser(int numberOfMessages, Token sender, Token receiver) {
         Random rand = new Random();
         String messageToExchange;
 
-        for(int i = 0; i < numberOfMessages; i++){
+        for (int i = 0; i < numberOfMessages; i++) {
             messageToExchange = sender.KnownMessages.get(rand.nextInt(sender.KnownMessages.size()));
 
-            while(receiver.KnownMessages.contains(messageToExchange)) {
+            while (receiver.KnownMessages.contains(messageToExchange)) {
                 messageToExchange = sender.KnownMessages.get(rand.nextInt(sender.KnownMessages.size()));
             }
 
@@ -151,46 +163,46 @@ public abstract class Token {
         }
     }
 
-    public void MessagesExchangeBetweenAllies(Token otherPlayer){
+    public void MessagesExchangeBetweenAllies(Token otherPlayer) {
         Random rand = new Random();
         int value;
 
-        for(int i = 0; i < 2; i++){
+        for (int i = 0; i < 2; i++) {
             value = rand.nextInt(KnownMessages.size());
 
-            while(otherPlayer.KnownMessages.contains(KnownMessages.get(value)))
+            while (otherPlayer.KnownMessages.contains(KnownMessages.get(value)))
                 value = rand.nextInt(KnownMessages.size());
 
             otherPlayer.KnownMessages.add(KnownMessages.get(value));
         }
 
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             value = rand.nextInt(KnownMessages.size());
 
-            while(KnownMessages.contains(otherPlayer.KnownMessages.get(value)))
+            while (KnownMessages.contains(otherPlayer.KnownMessages.get(value)))
                 value = rand.nextInt(KnownMessages.size());
 
             KnownMessages.add(otherPlayer.KnownMessages.get(value));
         }
     }
 
-    public void MessagesExchangeBetweenSameTypes(Token otherPlayer){
-        for(int i = 0; i < KnownMessages.size() - 1; i++){
-            if(otherPlayer.KnownMessages.contains(KnownMessages.get(i)))
+    public void MessagesExchangeBetweenSameTypes(Token otherPlayer) {
+        for (int i = 0; i < KnownMessages.size() - 1; i++) {
+            if (otherPlayer.KnownMessages.contains(KnownMessages.get(i)))
                 otherPlayer.KnownMessages.add(KnownMessages.get(i));
         }
 
-        for(int i = 0; i < otherPlayer.KnownMessages.size() - 1; i++){
-            if(KnownMessages.contains(otherPlayer.KnownMessages.get(i)))
+        for (int i = 0; i < otherPlayer.KnownMessages.size() - 1; i++) {
+            if (KnownMessages.contains(otherPlayer.KnownMessages.get(i)))
                 KnownMessages.add(otherPlayer.KnownMessages.get(i));
         }
     }
 
-    public void MessagesExchangeBetweenEnemies(Token otherPlayer){
+    public void MessagesExchangeBetweenEnemies(Token otherPlayer) {
         Token loser;
         loser = master.getMiniGamesManager().playMiniGame(this, otherPlayer);
 
-        if(loser == this)
+        if (loser == this)
             MessageExchangeWithLoser(3, this, otherPlayer);
         else
             MessageExchangeWithLoser(3, otherPlayer, this);

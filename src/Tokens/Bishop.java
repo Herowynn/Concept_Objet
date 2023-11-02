@@ -66,51 +66,52 @@ public class Bishop extends Token {
     }
 
     @Override
-    public void Move() {
-        // Number of case to move
-        int numberCaseMovement1 = generateRandomNumberOfCase();
+    public void MoveToFindMessages() {
 
-        // Moving
-        int i = 0;
-        while (CoordinateX < GameMap.SizeX && i < Math.abs(numberCaseMovement1)) {
-            i = i + 1;
-            if (numberCaseMovement1 <= 0) {
-                CoordinateX = CoordinateX - i;
+        Random random = new Random();
 
-            } else {
-                CoordinateX = CoordinateX + i;
+        // List of all the direction the token could choose
+        Directions[] orientation = { Directions.NE, Directions.NW,
+                Directions.SE, Directions.SW };
+
+        // Saving of the llast direction
+        LastDirection = orientation[random.nextInt(orientation.length)];
+
+        // Number of case to move, random umber between 0 and 5 inclusive
+        int numberCaseMovement = random.nextInt(6);
+        System.out.println("random number" + numberCaseMovement);
+        int i = 1;
+        while (CoordinateX < GameMap.SizeX && CoordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
+                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupied()) {
+            switch (LastDirection) {
+
+                case SE:
+                    CoordinateX = CoordinateX + i;
+                    CoordinateY = CoordinateY - i;
+                    break;
+
+                case SW:
+                    CoordinateX = CoordinateX - i;
+                    CoordinateY = CoordinateY;
+                    break;
+
+                case NE:
+                    CoordinateX = CoordinateX + i;
+                    CoordinateY = CoordinateY + i;
+                    break;
+
+                case NW:
+                    CoordinateX = CoordinateX + i;
+                    CoordinateY = CoordinateY - i;
+                    break;
 
             }
-            System.out.println(CoordinateX);
-            CoordinateY = 0;
+            i++;
 
         }
-        // Number of case to move
-        int numberCaseMovement2 = generateRandomNumberOfCase();
-
-        // Moving
-        int j = 0;
-        while (CoordinateX < GameMap.SizeX && i < Math.abs(numberCaseMovement2)) {
-            i = i + 1;
-            if (numberCaseMovement2 <= 0) {
-                CoordinateX = CoordinateX - j;
-
-            } else {
-                CoordinateX = CoordinateX + j;
-
-            }
-            System.out.println(CoordinateX);
-            CoordinateY = 0;
-        }
-        // Loss of energy after the moving
-
-        EnergyLeft = EnergyLeft - ((numberCaseMovement1 + numberCaseMovement2) * MovementPrice);
+        EnergyLeft = EnergyLeft - (numberCaseMovement * MovementPrice);
         EnergyLeft = Math.round(EnergyLeft * 10.0) / 10.0;
-        if (EnergyLeft < 0) {
-            EnergyLeft = 0;
-        }
-        // Saving of the last direction, which is East.
-        LastDirection = calculTheLastDirection(numberCaseMovement1, numberCaseMovement2);
-        super.Move();
+
+        super.MoveToFindMessages();
     }
 }

@@ -77,44 +77,50 @@ public class Rook extends Token {
     }
 
     @Override
-    public void Move() {
+    public void MoveToFindMessages() {
 
-        if (EnergyLeft >= 0.20 * EnergyMax) {
-            // The rooks move only two squares to the left.
+        Random random = new Random();
 
-            int mapLength = 100; // length of the map
-            int mapWidth = 50; // width of the map
+        // List of all the direction the token could choose
+        Directions[] orientation = { Directions.E, Directions.N, Directions.S, Directions.W };
 
-            // Number of case to move
-            int numberCaseMovement = generateRandomNumberOfCase();
+        // Saving of the llast direction
+        LastDirection = orientation[random.nextInt(orientation.length)];
 
-            // Moving
-
-            // obstacles
-            int i = 0;
-            while (CoordinateX < mapLength && i < Math.abs(numberCaseMovement)) {
-                i = i + 1;
-                if (numberCaseMovement <= 0) {
-                    CoordinateX = CoordinateX - i;
-
-                } else {
+        // Number of case to move, random umber between 0 and 5 inclusive
+        int numberCaseMovement = random.nextInt(6);
+        System.out.println("random number" + numberCaseMovement);
+        int i = 1;
+        while (CoordinateX < GameMap.SizeX && CoordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
+                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupied()) {
+            switch (LastDirection) {
+                case E:
                     CoordinateX = CoordinateX + i;
+                    CoordinateY = CoordinateY;
+                    break;
 
-                }
-                System.out.println(CoordinateX);
-                CoordinateY = 0;
+                case N:
+                    CoordinateY = CoordinateY + i;
+                    CoordinateX = CoordinateX;
+                    break;
+
+                case S:
+                    CoordinateY = CoordinateY - i;
+                    CoordinateX = CoordinateX;
+                    break;
+
+                case W:
+                    CoordinateX = CoordinateX - i;
+                    CoordinateY = CoordinateY;
+                    break;
 
             }
-            // Loss of energy after the moving
-            EnergyLeft = EnergyLeft - (numberCaseMovement * MovementPrice);
-            EnergyLeft = Math.round(EnergyLeft * 10.0) / 10.0;
-            if (EnergyLeft < 0) {
-                EnergyLeft = 0;
-            }
-            // Saving of the last direction
-            LastDirection = calculTheLastDirection(numberCaseMovement, 0);
+            i++;
 
-            super.Move();
         }
+        EnergyLeft = EnergyLeft - (numberCaseMovement * MovementPrice);
+        EnergyLeft = Math.round(EnergyLeft * 10.0) / 10.0;
+
+        super.MoveToFindMessages();
     }
 }
