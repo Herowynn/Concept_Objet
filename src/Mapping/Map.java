@@ -1,8 +1,8 @@
 package Mapping;
 
 import java.util.Random;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.List;
 
 import Enums.Directions;
 import Enums.Types;
@@ -151,13 +151,13 @@ public class Map {
         return null;
     }
 
-    public Dictionary<Box, Directions> availableTiles(int coordonateX, int coordonateY) {
-        Dictionary<Box, Directions> availableTiles = new Hashtable<>();
+    public List<Directions> availableTiles(int coordonateX, int coordonateY) {
+        List<Directions> availableTiles = new ArrayList<Directions>();
         for (int x = coordonateX - 1; x <= coordonateX + 1; x++) {
             for (int y = coordonateY - 1; y <= coordonateY + 1; y++) {
                 if (x != -1 && y != -1 && x != SizeX && y != SizeY) {
                     if (!MapInfos[x][y].isBlockedByObstacle() && (x != coordonateX && y != coordonateY)) {
-                        availableTiles.put(MapInfos[x][y], getDirection(coordonateX, coordonateY, x, y));
+                        availableTiles.add(getDirection(coordonateX, coordonateY, x, y));
                     }
                 }
             }
