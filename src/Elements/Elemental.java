@@ -23,6 +23,8 @@ public abstract class Elemental {
     protected MiniGamesManager miniGamesManager;
     protected Types type;
     protected Alliances alliance;
+    protected int coordinateX;
+    protected int coordinateY;
 
     public Elemental(String name, Types type, Mapping.Map map, int nbOfTokens){
         Name = name;
@@ -35,6 +37,17 @@ public abstract class Elemental {
             alliance = Alliances.VENFLAMME;
         else
             alliance = Alliances.HYDRATERRE;
+
+        HashSet<String> mySafeZone = GameMap.getBoxesFromMySafeZone(type);
+
+        Random rand = new Random();
+        String coordinates = ((String)mySafeZone.toArray()[rand.nextInt(mySafeZone.size())]);
+        System.out.println(coordinates);
+
+        coordinateX = Integer.parseInt(coordinates.split(",")[0]);
+        coordinateY = Integer.parseInt(coordinates.split(",")[1]);
+
+        GameMap.setMaster(coordinateX, coordinateY, this);
     }
 
     public void CollectMessages(String[] messagesToCollect){
@@ -98,5 +111,9 @@ public abstract class Elemental {
 
     public List<Token> GetTokenList(){
         return ElementTokens;
+    }
+
+    public void getCoordinates(){
+        System.out.println(coordinateX + ", " + coordinateY);
     }
 }
