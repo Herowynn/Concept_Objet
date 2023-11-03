@@ -34,10 +34,10 @@ public class Main {
         masters.add(WaterMaster);
         masters.add(EarthMaster);
 
-        SimulationManager.getInstance(masters);
+        /*SimulationManager.getInstance(masters);
         tokens = SimulationManager.GetAllTokensFromMasters();
-        /*for (Token token : tokens) {
-            System.out.println(token.Name);
+        for (Token token : tokens) {
+            System.out.println(token.getLetterForMapDisplay());
         }*/
 
         /*MiniGamesManager mGManager = new MiniGamesManager();
@@ -49,14 +49,6 @@ public class Main {
 
         /*for(Elemental master : masters){
             master.getCoordinates();
-        }*/
-
-
-        /*for (Box[] boxTab : myMap.MapInfos){
-            for(Box box : boxTab){
-                if(box.isOcccupiedByMaster())
-                    System.out.println(box.isOcccupiedByMaster());
-            }
         }*/
 
         myMap.printMap();

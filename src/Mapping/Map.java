@@ -8,22 +8,27 @@ import java.util.List;
 import Elements.Elemental;
 import Enums.Directions;
 import Enums.Types;
+import Tokens.Token;
 
 public class Map {
     public int SizeX;
     public int SizeY;
-    public Box[][] MapInfos;
+    private Box[][] mapInfo;
 
     public Map(int sizeX, int sizeY) {
         SizeX = sizeX;
         SizeY = sizeY;
-        MapInfos = new Box[SizeX][SizeY];
+        mapInfo = new Box[SizeX][SizeY];
         for (int x = 0; x < SizeX; x++) {
             for (int y = 0; y < SizeY; y++) {
-                MapInfos[x][y] = initiateBox(x, y);
+                mapInfo[x][y] = initiateBox(x, y);
             }
         }
         obstacleGeneration();
+    }
+
+    public Box[][] getMapInfo() {
+        return mapInfo;
     }
 
     private Box initiateBox(int x, int y) {
@@ -53,11 +58,11 @@ public class Map {
         for (int obstacle = 0; obstacle < int_random; obstacle++) {
             int coordonateX_random = r.nextInt(SizeX);
             int coordonateY_random = r.nextInt(SizeY);
-            while (MapInfos[coordonateX_random][coordonateY_random].getClass() == SafeBox.class || MapInfos[coordonateX_random][coordonateY_random].isBlockedByObstacle()) {
+            while (mapInfo[coordonateX_random][coordonateY_random].getClass() == SafeBox.class || mapInfo[coordonateX_random][coordonateY_random].isBlockedByObstacle()) {
                 coordonateX_random = r.nextInt(SizeX);
                 coordonateY_random = r.nextInt(SizeY);
             }
-            MapInfos[coordonateX_random][coordonateY_random].setObstacle();
+            mapInfo[coordonateX_random][coordonateY_random].setObstacle();
         }
     }
 
@@ -67,6 +72,11 @@ public class Map {
         final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
         final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
         final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
+        final String ANSI_RED = "\033[0;31m";
+        final String ANSI_GREEN = "\033[0;32m";
+        final String ANSI_BLUE = "\033[0;34m";
+        final String ANSI_PURPLE = "\033[0;35m";
+
         for (int x = 0; x < SizeX + 2; x++) {
             if (x == 0) {
                 System.out.print("┌");
@@ -81,36 +91,50 @@ public class Map {
                 if (x == 0) {
                     System.out.print("│");
                 }
-                if (MapInfos[x][y].getClass() == SafeBox.class) {
-                    switch (((SafeBox) MapInfos[x][y]).getType()) {
+                if (mapInfo[x][y].getClass() == SafeBox.class) {
+                    switch (((SafeBox) mapInfo[x][y]).getType()) {
                         case FEU:
-                            if(((SafeBox)MapInfos[x][y]).isOcccupiedByMaster())
+                            if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
                                 System.out.print(ANSI_RED_BACKGROUND + "M" + ANSI_RESET);
                             else
                                 System.out.print(ANSI_RED_BACKGROUND + " " + ANSI_RESET);
                             break;
                         case EAU:
-                            if(((SafeBox)MapInfos[x][y]).isOcccupiedByMaster())
+                            if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
                                 System.out.print(ANSI_BLUE_BACKGROUND + "M" + ANSI_RESET);
                             else
                                 System.out.print(ANSI_BLUE_BACKGROUND + " " + ANSI_RESET);
                             break;
                         case AIR:
-                            if(((SafeBox)MapInfos[x][y]).isOcccupiedByMaster())
+                            if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
                                 System.out.print(ANSI_PURPLE_BACKGROUND + "M" + ANSI_RESET);
                             else
                                 System.out.print(ANSI_PURPLE_BACKGROUND + " " + ANSI_RESET);
                             break;
                         case TERRE:
-                            if(((SafeBox)MapInfos[x][y]).isOcccupiedByMaster())
+                            if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
                                 System.out.print(ANSI_GREEN_BACKGROUND + "M" + ANSI_RESET);
                             else
                                 System.out.print(ANSI_GREEN_BACKGROUND + " " + ANSI_RESET);
                             break;
                     }
-                } else if (MapInfos[x][y].isBlockedByObstacle()) {
+                } else if (mapInfo[x][y].isOccupiedByToken()) {
+                    switch (mapInfo[x][y].getToken().Type) {
+                        case FEU:
+                            System.out.print(ANSI_RED + mapInfo[x][y].getToken().getLetterForMapDisplay() + ANSI_RESET);
+                            break;
+                        case EAU:
+                            System.out.print(ANSI_BLUE + mapInfo[x][y].getToken().getLetterForMapDisplay() + ANSI_RESET);
+                            break;
+                        case AIR:
+                            System.out.print(ANSI_PURPLE + mapInfo[x][y].getToken().getLetterForMapDisplay() + ANSI_RESET);
+                            break;
+                        case TERRE:
+                            System.out.print(ANSI_GREEN + mapInfo[x][y].getToken().getLetterForMapDisplay() + ANSI_RESET);
+                            break;
+                    }
+                } else if (mapInfo[x][y].isBlockedByObstacle()) {
                     System.out.print("/");
-
                 } else {
                     System.out.print(" ");
                 }
@@ -163,7 +187,7 @@ public class Map {
         for (int x = coordonateX - 1; x <= coordonateX + 1; x++) {
             for (int y = coordonateY - 1; y <= coordonateY + 1; y++) {
                 if (x != -1 && y != -1 && x != SizeX && y != SizeY) {
-                    if (!MapInfos[x][y].isBlockedByObstacle() && (x != coordonateX && y != coordonateY)) {
+                    if (!mapInfo[x][y].isBlockedByObstacle() && (x != coordonateX && y != coordonateY)) {
                         availableTiles.add(getDirection(coordonateX, coordonateY, x, y));
                     }
                 }
@@ -176,9 +200,9 @@ public class Map {
         HashSet<String> safeZone = new HashSet<>();
         String values;
 
-        for (int i = 0; i < MapInfos.length; i++) {
-            for (int j = 0; j < MapInfos[0].length; j++){
-                if(MapInfos[i][j] instanceof SafeBox && ((SafeBox) MapInfos[i][j]).getType() == type){
+        for (int i = 0; i < mapInfo.length; i++) {
+            for (int j = 0; j < mapInfo[0].length; j++) {
+                if (mapInfo[i][j] instanceof SafeBox && ((SafeBox) mapInfo[i][j]).getType() == type) {
                     values = i + "," + j;
                     safeZone.add(values);
                 }
@@ -189,6 +213,10 @@ public class Map {
     }
 
     public void setMaster(int coordinateX, int coordinateY, Elemental master) {
-        ((SafeBox) MapInfos[coordinateX][coordinateY]).setMaster(master);
+        ((SafeBox) mapInfo[coordinateX][coordinateY]).setMaster(master);
+    }
+
+    public void setOccupied(int coordinateX, int coordinateY, boolean value, Token token) {
+        mapInfo[coordinateX][coordinateY].setOccupied(value, token);
     }
 }

@@ -4,6 +4,7 @@ import java.util.*;
 
 import Elements.*;
 import Enums.*;
+import Mapping.SafeBox;
 
 public abstract class Token {
     public Types Type;
@@ -15,11 +16,12 @@ public abstract class Token {
     public double MovementPrice;
     public double MinMovementPrice;
     public double MaxMovementPrice;
-    public int CoordinateX;
-    public int CoordinateY;
+    protected int coordinateX;
+    protected int coordinateY;
     public Directions LastDirection;
     protected Mapping.Map GameMap;
     protected Elemental master;
+    protected String letterForMapDisplay;
 
     public void EnergyRegeneration() {
         EnergyLeft = EnergyMax;
@@ -31,6 +33,20 @@ public abstract class Token {
         Type = master.getType();
         alliance = master.getAlliance();
         Name = name;
+
+        Random rand = new Random();
+        coordinateX = rand.nextInt(GameMap.SizeX);
+        coordinateY = rand.nextInt(GameMap.SizeY);
+
+        while(GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken()
+                || GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByMaster()
+                || (GameMap.getMapInfo()[coordinateX][coordinateY].isSafeZone() && ((SafeBox)GameMap.getMapInfo()[coordinateX][coordinateY]).getType() != Type)
+                || GameMap.getMapInfo()[coordinateX][coordinateY].isBlockedByObstacle()){
+            coordinateX = rand.nextInt(GameMap.SizeX);
+            coordinateY = rand.nextInt(GameMap.SizeY);
+        }
+
+        GameMap.setOccupied(coordinateX, coordinateY, true, this);
     }
 
     public void MoveToFindMessages() {
@@ -43,10 +59,14 @@ public abstract class Token {
 
         } else if (this.EnergyLeft == 0) {
             // If the token does not have enough energy, it becomes an obstacle
-            GameMap.MapInfos[CoordinateX][CoordinateY].setObstacle();
-            GameMap.MapInfos[CoordinateX][CoordinateY].setOccupied(true, this);
+            GameMap.getMapInfo()[coordinateX][coordinateY].setObstacle();
+            GameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(true, this);
 
         }
+    }
+
+    public String getLetterForMapDisplay() {
+        return letterForMapDisplay;
     }
 
     // Check if there is another player around for the message exchange
@@ -54,12 +74,12 @@ public abstract class Token {
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 if (x != 0 && y != 0) {
-                    if (Type == GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken().Type) {
-                        MessagesExchangeBetweenSameTypes(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
-                    } else if (alliance == GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken().alliance) {
-                        MessagesExchangeBetweenAllies(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
-                    } else if (GameMap.MapInfos[CoordinateX + x][CoordinateY - y].isOccupiedByToken()) {
-                        MessagesExchangeBetweenEnemies(GameMap.MapInfos[CoordinateX + x][CoordinateY + y].getToken());
+                    if (Type == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().Type) {
+                        MessagesExchangeBetweenSameTypes(GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                    } else if (alliance == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().alliance) {
+                        MessagesExchangeBetweenAllies(GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                    } else if (GameMap.getMapInfo()[coordinateX + x][coordinateY - y].isOccupiedByToken()) {
+                        MessagesExchangeBetweenEnemies(GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
                     }
                 }
             }
@@ -69,8 +89,8 @@ public abstract class Token {
     public Map<String, Integer> getCoordinateXY() {
         Map<String, Integer> coordinatesXY = new HashMap<>();
         // Ajoute des valeurs pour les coordonnées X et Y
-        coordinatesXY.put("coordinateX", CoordinateX);
-        coordinatesXY.put("coordinateY", CoordinateY);
+        coordinatesXY.put("coordinateX", coordinateX);
+        coordinatesXY.put("coordinateY", coordinateY);
         System.out.println(coordinatesXY);
         return coordinatesXY;
     }
