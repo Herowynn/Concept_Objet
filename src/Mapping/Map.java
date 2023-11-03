@@ -84,43 +84,34 @@ public class Map {
                 if (MapInfos[x][y].getClass() == SafeBox.class) {
                     switch (((SafeBox) MapInfos[x][y]).getType()) {
                         case FEU:
-                            System.out.print(ANSI_RED_BACKGROUND + " " + ANSI_RESET);
+                            if(((SafeBox)MapInfos[x][y]).isOcccupiedByMaster())
+                                System.out.print(ANSI_RED_BACKGROUND + "M" + ANSI_RESET);
+                            else
+                                System.out.print(ANSI_RED_BACKGROUND + " " + ANSI_RESET);
                             break;
                         case EAU:
-                            System.out.print(ANSI_BLUE_BACKGROUND + " " + ANSI_RESET);
+                            if(((SafeBox)MapInfos[x][y]).isOcccupiedByMaster())
+                                System.out.print(ANSI_BLUE_BACKGROUND + "M" + ANSI_RESET);
+                            else
+                                System.out.print(ANSI_BLUE_BACKGROUND + " " + ANSI_RESET);
                             break;
                         case AIR:
-                            System.out.print(ANSI_PURPLE_BACKGROUND + " " + ANSI_RESET);
+                            if(((SafeBox)MapInfos[x][y]).isOcccupiedByMaster())
+                                System.out.print(ANSI_PURPLE_BACKGROUND + "M" + ANSI_RESET);
+                            else
+                                System.out.print(ANSI_PURPLE_BACKGROUND + " " + ANSI_RESET);
                             break;
                         case TERRE:
-                            System.out.print(ANSI_GREEN_BACKGROUND + " " + ANSI_RESET);
+                            if(((SafeBox)MapInfos[x][y]).isOcccupiedByMaster())
+                                System.out.print(ANSI_GREEN_BACKGROUND + "M" + ANSI_RESET);
+                            else
+                                System.out.print(ANSI_GREEN_BACKGROUND + " " + ANSI_RESET);
                             break;
                     }
                 } else if (MapInfos[x][y].isBlockedByObstacle()) {
                     System.out.print("/");
 
-                } else if(MapInfos[x][y].isOcccupiedByMaster()){
-                    System.out.println("Je fais un test !");
-                    switch (((SafeBox) MapInfos[x][y]).getMaster().getType()) {
-                        case FEU:
-//                            System.out.print(ANSI_RED_BACKGROUND + "M" + ANSI_RESET);
-                            System.out.println("M");
-                            break;
-                        case EAU:
-//                            System.out.print(ANSI_BLUE_BACKGROUND + "M" + ANSI_RESET);
-                            System.out.println("M");
-                            break;
-                        case AIR:
-                            System.out.println("M");
-//                            System.out.print(ANSI_PURPLE_BACKGROUND + "M" + ANSI_RESET);
-                            break;
-                        case TERRE:
-                            System.out.println("M");
-//                            System.out.print(ANSI_GREEN_BACKGROUND + "M" + ANSI_RESET);
-                            break;
-                    }
-                }
-                else {
+                } else {
                     System.out.print(" ");
                 }
 

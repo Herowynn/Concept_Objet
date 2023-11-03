@@ -52,12 +52,12 @@ public class Main {
         }*/
 
 
-        for (Box[] boxTab : myMap.MapInfos){
+        /*for (Box[] boxTab : myMap.MapInfos){
             for(Box box : boxTab){
                 if(box.isOcccupiedByMaster())
                     System.out.println(box.isOcccupiedByMaster());
             }
-        }
+        }*/
 
         myMap.printMap();
 
