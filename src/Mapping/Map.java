@@ -121,16 +121,16 @@ public class Map {
                 } else if (mapInfo[x][y].isOccupiedByToken()) {
                     switch (mapInfo[x][y].getToken().Type) {
                         case FEU:
-                            System.out.print(ANSI_RED + "T" + ANSI_RESET);
+                            System.out.print(ANSI_RED + mapInfo[x][y].getToken().getLetterForMapDisplay() + ANSI_RESET);
                             break;
                         case EAU:
-                            System.out.print(ANSI_BLUE + "T" + ANSI_RESET);
+                            System.out.print(ANSI_BLUE + mapInfo[x][y].getToken().getLetterForMapDisplay() + ANSI_RESET);
                             break;
                         case AIR:
-                            System.out.print(ANSI_PURPLE + "T" + ANSI_RESET);
+                            System.out.print(ANSI_PURPLE + mapInfo[x][y].getToken().getLetterForMapDisplay() + ANSI_RESET);
                             break;
                         case TERRE:
-                            System.out.print(ANSI_GREEN + "T" + ANSI_RESET);
+                            System.out.print(ANSI_GREEN + mapInfo[x][y].getToken().getLetterForMapDisplay() + ANSI_RESET);
                             break;
                     }
                 } else if (mapInfo[x][y].isBlockedByObstacle()) {

@@ -21,6 +21,7 @@ public abstract class Token {
     public Directions LastDirection;
     protected Mapping.Map GameMap;
     protected Elemental master;
+    protected String letterForMapDisplay;
 
     public void EnergyRegeneration() {
         EnergyLeft = EnergyMax;
@@ -62,6 +63,10 @@ public abstract class Token {
             GameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(true, this);
 
         }
+    }
+
+    public String getLetterForMapDisplay() {
+        return letterForMapDisplay;
     }
 
     // Check if there is another player around for the message exchange

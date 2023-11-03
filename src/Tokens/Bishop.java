@@ -8,6 +8,7 @@ import Elements.*;
 public class Bishop extends Token {
     public Bishop(Mapping.Map map, String name, Elemental master) {
         super(map, name, master);
+        letterForMapDisplay = "B";
         Random random = new Random();
         // All the Bishop are suppose to have the same Movement price intervals
         this.MaxMovementPrice = 3.0;

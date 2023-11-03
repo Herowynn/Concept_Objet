@@ -9,6 +9,7 @@ public class Queen extends Token {
 
     public Queen(Mapping.Map map, String name, Elemental master) {
         super(map, name, master);
+        letterForMapDisplay = "Q";
         Random random = new Random();
         // All the Queen are supposed to have the same Movement price intervals
         this.MaxMovementPrice = 2.0;

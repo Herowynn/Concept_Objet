@@ -34,11 +34,11 @@ public class Main {
         masters.add(WaterMaster);
         masters.add(EarthMaster);
 
-        SimulationManager.getInstance(masters);
+        /*SimulationManager.getInstance(masters);
         tokens = SimulationManager.GetAllTokensFromMasters();
         for (Token token : tokens) {
-            System.out.println(token.getCoordinateXY());
-        }
+            System.out.println(token.getLetterForMapDisplay());
+        }*/
 
         /*MiniGamesManager mGManager = new MiniGamesManager();
         Random rand = new Random();
