@@ -20,6 +20,11 @@ public class SafeBox extends Box{
         this.master = master;
     }
 
+    @Override
+    public boolean isSafeZone() {
+        return true;
+    }
+
     public Elemental getMaster(){
         return master;
     }

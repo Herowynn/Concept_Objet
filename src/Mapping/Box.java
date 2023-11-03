@@ -39,7 +39,11 @@ public class Box {
         return token;
     }
 
-    public boolean isOcccupiedByMaster(){
+    public boolean isOccupiedByMaster(){
         return occupiedByMaster;
+    }
+
+    public boolean isSafeZone(){
+        return false;
     }
 }

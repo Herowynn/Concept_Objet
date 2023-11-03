@@ -85,43 +85,43 @@ public class Queen extends Token {
         int numberCaseMovement = random.nextInt(6);
         System.out.println("random number" + numberCaseMovement);
         int i = 1;
-        while (CoordinateX < GameMap.SizeX && CoordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
-                && !GameMap.MapInfos[CoordinateX][CoordinateY].isOccupiedByToken()) {
+        while (coordinateX < GameMap.SizeX && coordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
+                && !GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken()) {
             switch (LastDirection) {
                 case E:
-                    CoordinateX = CoordinateX + i;
+                    coordinateX = coordinateX + i;
                     break;
 
                 case W:
-                    CoordinateX = CoordinateX - i;
+                    coordinateX = coordinateX - i;
                     break;
 
                 case N:
-                    CoordinateY = CoordinateY + i;
+                    coordinateY = coordinateY + i;
                     break;
 
                 case S:
-                    CoordinateY = CoordinateY - i;
+                    coordinateY = coordinateY - i;
                     break;
 
                 case SE:
-                    CoordinateX = CoordinateX + i;
-                    CoordinateY = CoordinateY - i;
+                    coordinateX = coordinateX + i;
+                    coordinateY = coordinateY - i;
                     break;
 
                 case SW:
-                    CoordinateX = CoordinateX - i;
-                    CoordinateY = CoordinateY - i;
+                    coordinateX = coordinateX - i;
+                    coordinateY = coordinateY - i;
                     break;
 
                 case NE:
-                    CoordinateX = CoordinateX + i;
-                    CoordinateY = CoordinateY + i;
+                    coordinateX = coordinateX + i;
+                    coordinateY = coordinateY + i;
                     break;
 
                 case NW:
-                    CoordinateX = CoordinateX - i;
-                    CoordinateY = CoordinateY + i;
+                    coordinateX = coordinateX - i;
+                    coordinateY = coordinateY + i;
                     break;
 
             }

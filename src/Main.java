@@ -36,9 +36,9 @@ public class Main {
 
         SimulationManager.getInstance(masters);
         tokens = SimulationManager.GetAllTokensFromMasters();
-        /*for (Token token : tokens) {
-            System.out.println(token.Name);
-        }*/
+        for (Token token : tokens) {
+            System.out.println(token.getCoordinateXY());
+        }
 
         /*MiniGamesManager mGManager = new MiniGamesManager();
         Random rand = new Random();
@@ -49,14 +49,6 @@ public class Main {
 
         /*for(Elemental master : masters){
             master.getCoordinates();
-        }*/
-
-
-        /*for (Box[] boxTab : myMap.MapInfos){
-            for(Box box : boxTab){
-                if(box.isOcccupiedByMaster())
-                    System.out.println(box.isOcccupiedByMaster());
-            }
         }*/
 
         myMap.printMap();
