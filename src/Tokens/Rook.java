@@ -1,5 +1,7 @@
 package Tokens;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import Elements.*;
@@ -82,10 +84,23 @@ public class Rook extends Token {
         Random random = new Random();
 
         // List of all the direction the token could choose
-        Directions[] orientation = { Directions.E, Directions.N, Directions.S, Directions.W };
+        List<Directions> orientation = new ArrayList<>();
+        orientation.add(Directions.S);
+        orientation.add(Directions.W);
+        orientation.add(Directions.N);
+        orientation.add(Directions.E);
 
-        // Saving of the llast direction
-        LastDirection = orientation[random.nextInt(orientation.length)];
+        // List of the direction available for the token
+        List<Directions> availableDirections = GameMap.availableTiles(coordinateX, coordinateY);
+
+        // Looking for the common direction between those the token could choose and
+        // those available
+        List<Directions> commonDirections = new ArrayList<>();
+        for (Directions element : orientation) {
+            if (availableDirections.contains(element)) {
+                commonDirections.add(element);
+            }
+        }
 
         // Number of case to move, random umber between 0 and 5 inclusive
         int numberCaseMovement = random.nextInt(6);

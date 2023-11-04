@@ -1,5 +1,7 @@
 package Tokens;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import Enums.*;
@@ -71,11 +73,25 @@ public class Bishop extends Token {
         Random random = new Random();
 
         // List of all the direction the token could choose
-        Directions[] orientation = { Directions.NE, Directions.NW,
-                Directions.SE, Directions.SW };
+        List<Directions> orientation = new ArrayList<>();
+        orientation.add(Directions.NE);
+        orientation.add(Directions.NW);
+        orientation.add(Directions.SE);
+        orientation.add(Directions.SW);
 
-        // Saving of the llast direction
-        LastDirection = orientation[random.nextInt(orientation.length)];
+        // List of the direction available for the token
+        List<Directions> availableDirections = GameMap.availableTiles(coordinateX, coordinateY);
+
+        // Looking for the common direction between those the token could choose and
+        // those available
+        List<Directions> commonDirections = new ArrayList<>();
+        for (Directions element : orientation) {
+            if (availableDirections.contains(element)) {
+                commonDirections.add(element);
+            }
+        }
+        // Saving of the last direction
+        LastDirection = commonDirections.get(random.nextInt(commonDirections.size()));
 
         // Number of case to move, random umber between 0 and 5 inclusive
         int numberCaseMovement = random.nextInt(6);
