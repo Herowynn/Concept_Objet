@@ -4,15 +4,15 @@ import Elements.*;
 import Enums.*;
 
 public class SafeBox extends Box{
-    public Types Type;
+    private final Types type;
     private Master master;
 
     public SafeBox(int x, int y, Types type) {
         super(x, y);
-        Type = type;
+        this.type = type;
     }
     public Types getType(){
-        return Type;
+        return type;
     }
 
     public void setMaster(Master master){

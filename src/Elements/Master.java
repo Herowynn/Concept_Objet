@@ -5,19 +5,14 @@ import Managers.*;
 import Tokens.*;
 
 import java.util.*;
-import java.util.Map;
 
 public abstract class Master {
-    public String Name;
-    protected String ANSI_Code = "\u001B[0m";
-    public String ANSI_ResetCode = "\u001B[0m";
-    protected int NumberOfTokens;
-    protected List<String> MessagesCollected = new ArrayList<String>();
-    public Map<String, Integer> BonusMalusEnergy = new Hashtable<String, Integer>();
-    public Map<String, Integer> BonusMalusMovement = new Hashtable<String, Integer>();
-    protected HashMap<String, Integer> PercentagesCreationToken = new HashMap<String, Integer>();
-    protected List<Token> ElementTokens = new ArrayList<Token>();
-    protected Mapping.Map GameMap;
+    protected String name;
+    protected int numberOfTokens;
+    protected List<String> messagesCollected = new ArrayList<>();
+    protected HashMap<String, Integer> percentagesCreationToken = new HashMap<>();
+    protected List<Token> elementTokens = new ArrayList<>();
+    protected Mapping.Map gameMap;
     protected MiniGamesManager miniGamesManager;
     protected Types type;
     protected Alliances alliance;
@@ -27,10 +22,10 @@ public abstract class Master {
 
     public Master(String name, Types type, Mapping.Map map, int nbOfTokens, SimulationManager manager){
         simulationManager = manager;
-        Name = name;
+        this.name = name;
         this.type = type;
-        NumberOfTokens = nbOfTokens;
-        GameMap = map;
+        numberOfTokens = nbOfTokens;
+        gameMap = map;
         miniGamesManager = MiniGamesManager.getInstance();
 
         if(type == Types.AIR || type == Types.FEU)
@@ -38,7 +33,7 @@ public abstract class Master {
         else
             alliance = Alliances.HYDRATERRE;
 
-        HashSet<String> mySafeZone = GameMap.getBoxesFromMySafeZone(type);
+        HashSet<String> mySafeZone = gameMap.getBoxesFromMySafeZone(type);
 
         Random rand = new Random();
         String coordinates = ((String)mySafeZone.toArray()[rand.nextInt(mySafeZone.size())]);
@@ -47,19 +42,16 @@ public abstract class Master {
         coordinateX = Integer.parseInt(coordinates.split(",")[0]);
         coordinateY = Integer.parseInt(coordinates.split(",")[1]);
 
-        GameMap.setMaster(coordinateX, coordinateY, this);
+        gameMap.setMaster(coordinateX, coordinateY, this);
     }
 
     public void receiveMessagesFromToken(List<String> messages, Token token){
         for(String message : messages) {
-            if (!MessagesCollected.contains(message))
-                MessagesCollected.add(message);
+            if (!messagesCollected.contains(message))
+                messagesCollected.add(message);
         }
-        token.knownMessages.clear();
+        token.getKnownMessages().clear();
         giveMessagesToToken(5, token);
-    }
-    public void setSimulationManager(SimulationManager manager) {
-        simulationManager = manager;
     }
 
     public Types getType(){
@@ -74,46 +66,46 @@ public abstract class Master {
         return miniGamesManager;
     }
 
-    public int NumberOfMessagesCollected(){
-        return MessagesCollected.size();
+    public int getNumberOfMessagesCollected(){
+        return messagesCollected.size();
     }
 
     protected void createTokens(Types type){
-        Queen queen = new Queen(GameMap, type.toString() + " Queen", this);
+        Queen queen = new Queen(gameMap, type.toString() + " Queen", this);
         giveMessagesToToken(10, queen);
-        ElementTokens.add(queen);
+        elementTokens.add(queen);
 
         Random rand = new Random();
         int value;
 
-        for(int i = 1; i < NumberOfTokens; i++){
+        for(int i = 1; i < numberOfTokens; i++){
             value = rand.nextInt(100);
 
-            if(value <= (int)PercentagesCreationToken.values().toArray()[0]){
-                Bishop bishop = new Bishop(GameMap, type.toString() + " Bishop" + i, this);
+            if(value <= (int) percentagesCreationToken.values().toArray()[0]){
+                Bishop bishop = new Bishop(gameMap, type.toString() + " Bishop" + i, this);
                 giveMessagesToToken(10, bishop);
-                ElementTokens.add(bishop);
+                elementTokens.add(bishop);
             }
             else {
-                Rook rook = new Rook(GameMap, type.toString() + " Rook" + i, this);
+                Rook rook = new Rook(gameMap, type.toString() + " Rook" + i, this);
                 giveMessagesToToken(10, rook);
-                ElementTokens.add(rook);
+                elementTokens.add(rook);
             }
         }
     }
 
-    protected void CreatePercentagesTokens(int Bishop, int Rook){
-        PercentagesCreationToken.put("Bishop", Bishop);
-        PercentagesCreationToken.put("Rook", Rook);
+    protected void createPercentagesTokens(int Bishop, int Rook){
+        percentagesCreationToken.put("Bishop", Bishop);
+        percentagesCreationToken.put("Rook", Rook);
     }
 
-    public List<Token> GetTokenList(){
-        return ElementTokens;
+    public List<Token> getTokenList(){
+        return elementTokens;
     }
 
-    public void getCoordinates(){
+    /*public void getCoordinates(){
         System.out.println(coordinateX + ", " + coordinateY);
-    }
+    }*/
 
     public void giveMessagesToToken(int number, Token token){
         Random rand = new Random();

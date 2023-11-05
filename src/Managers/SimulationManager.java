@@ -47,8 +47,55 @@ public class SimulationManager {
 
     public void setTokens(){
         for (Master master : masters) {
-            allTokens.addAll(master.GetTokenList());
+            allTokens.addAll(master.getTokenList());
         }
+    }
+
+    public void launchSimulation() throws InterruptedException {
+        Random rand = new Random();
+        int indexValue;
+
+        System.out.println("Initialization");
+
+        gameMap.printMap();
+
+        Master winner = null;
+
+        for(int i = 0; i < nbOfTurnsToPlay; i++){
+            tokensToPlay.addAll(allTokens);
+
+            System.out.println("Turn n°" + i);
+
+            while(!tokensToPlay.isEmpty()){
+                indexValue = rand.nextInt(tokensToPlay.size());
+                tokensToPlay.get(indexValue).move();
+                tokensToPlay.remove(indexValue);
+            }
+
+            gameMap.printMap();
+
+            for (Master master : masters){
+                if(master.getNumberOfMessagesCollected() == 120){
+                    winner = master;
+                    break;
+                }
+            }
+
+            if(winner != null)
+                break;
+
+            //Thread.sleep(1000);
+        }
+
+        if (winner == null) {
+            for (Master master : masters){
+                if(winner == null || master.getNumberOfMessagesCollected() > winner.getNumberOfMessagesCollected())
+                    winner = master;
+            }
+        }
+
+
+        Victory(winner, nbOfTurnsToPlay);
     }
 
     private void createMessagesList(){
@@ -88,57 +135,6 @@ public class SimulationManager {
         permutations(str.toCharArray(), 0);
     }
 
-    /*public static List<Token> getAllTokensFromMasters() {
-        return allTokens;
-    }*/
-
-    public void launchSimulation() throws InterruptedException {
-        Random rand = new Random();
-        int indexValue;
-
-        System.out.println("Initialization");
-
-        gameMap.printMap();
-
-        Master winner = null;
-
-        for(int i = 0; i < nbOfTurnsToPlay; i++){
-            tokensToPlay.addAll(allTokens);
-
-            System.out.println("Turn n°" + i);
-
-            while(!tokensToPlay.isEmpty()){
-                indexValue = rand.nextInt(tokensToPlay.size());
-                tokensToPlay.get(indexValue).Move();
-                tokensToPlay.remove(indexValue);
-            }
-
-            gameMap.printMap();
-
-            for (Master master : masters){
-                if(master.NumberOfMessagesCollected() == 120){
-                    winner = master;
-                    break;
-                }
-            }
-
-            if(winner != null)
-                break;
-
-            //Thread.sleep(1000);
-        }
-
-        if (winner == null) {
-            for (Master master : masters){
-                if(winner == null || master.NumberOfMessagesCollected() > winner.NumberOfMessagesCollected())
-                    winner = master;
-            }
-        }
-
-
-        Victory(winner, nbOfTurnsToPlay);
-    }
-
     public String getMessageAtIndex(int index){
         return allPossibleMessages.get(index);
     }
@@ -148,7 +144,7 @@ public class SimulationManager {
     }
 
     public void Victory(Master winner, int nbOfTurn){
-        System.out.println("Team " + winner.getType() + " wins the game after " + nbOfTurn + " turns with " + winner.NumberOfMessagesCollected() + " messages collected !");
+        System.out.println("Team " + winner.getType() + " wins the game after " + nbOfTurn + " turns with " + winner.getNumberOfMessagesCollected() + " messages collected !");
     }
 
 }
