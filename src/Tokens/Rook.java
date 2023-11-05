@@ -74,6 +74,7 @@ public class Rook extends Token {
 
     @Override
     public void MoveToFindMessages() {
+        GameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(false, this);
 
         Random random = new Random();
 
@@ -96,35 +97,40 @@ public class Rook extends Token {
             }
         }
 
+        // Saving of the last direction
+        LastDirection = commonDirections.get(random.nextInt(commonDirections.size()));
+
         // Number of case to move, random umber between 0 and 5 inclusive
-        int numberCaseMovement = random.nextInt(6);
+        int numberCaseMovement = random.nextInt(4);
         System.out.println("random number" + numberCaseMovement);
+
         int i = 1;
-        while (coordinateX < GameMap.SizeX && coordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
-                && !GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken()) {
+        while (coordinateX < GameMap.SizeX - 1 && coordinateY < GameMap.SizeY - 1 && coordinateY > 1 && coordinateX > 1 && i <= Math.abs(numberCaseMovement)
+                && !GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken() && !GameMap.getMapInfo()[coordinateX][coordinateY].isBlockedByObstacle()) {
             switch (LastDirection) {
                 case E:
-                    coordinateX = coordinateX + i;
+                    coordinateX = coordinateX + 1;
                     break;
 
                 case N:
-                    coordinateY = coordinateY + i;
+                    coordinateY = coordinateY + 1;
                     break;
 
                 case S:
-                    coordinateY = coordinateY - i;
+                    coordinateY = coordinateY - 1;
                     break;
 
                 case W:
-                    coordinateX = coordinateX - i;
+                    coordinateX = coordinateX - 1;
                     break;
 
             }
             i++;
-
         }
+
         EnergyLeft = EnergyLeft - (numberCaseMovement * MovementPrice);
         EnergyLeft = Math.round(EnergyLeft * 10.0) / 10.0;
+        GameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(true, this);
 
         super.MoveToFindMessages();
     }

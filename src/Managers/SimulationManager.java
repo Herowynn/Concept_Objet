@@ -95,8 +95,8 @@ public class SimulationManager {
 
         gameMap.printMap();
 
-        for(int i = 0; i < 1; i++){
-            tokensToPlay = allTokens;
+        for(int i = 0; i < 10; i++){
+            tokensToPlay.addAll(allTokens);
 
             while(!tokensToPlay.isEmpty()){
                 indexValue = rand.nextInt(tokensToPlay.size());

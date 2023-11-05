@@ -67,6 +67,11 @@ public abstract class Token {
             // If the token does not have enough energy, it becomes an obstacle
             GameMap.getMapInfo()[coordinateX][coordinateY].setObstacle();
             GameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(false, null);
+
+        }
+        else {
+            System.out.println("J'utilise le pathfinding là !");
+            GameMap.safeZonePathFinder(coordinateY, coordinateX, this.Type);
         }
     }
 
@@ -81,7 +86,7 @@ public abstract class Token {
         } else {
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 1; y++) {
-                    if (x != 0 && y != 0 && coordinateX + x <= GameMap.SizeX && coordinateY + y <= GameMap.SizeY && coordinateX + x >= 0 && coordinateY + y >= 0) {
+                    if (x != 0 && y != 0 && coordinateX + x < GameMap.SizeX && coordinateY + y < GameMap.SizeY && coordinateX + x >= 0 && coordinateY + y >= 0) {
                         if (GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken() != null && Type == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().Type) {
                             MessagesExchangeBetweenSameTypes(
                                     GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
@@ -220,12 +225,12 @@ public abstract class Token {
 
     public void MessagesExchangeBetweenSameTypes(Token otherPlayer) {
         for (int i = 0; i < knownMessages.size() - 1; i++) {
-            if (otherPlayer.knownMessages.contains(knownMessages.get(i)))
+            if (!otherPlayer.knownMessages.contains(knownMessages.get(i)))
                 otherPlayer.knownMessages.add(knownMessages.get(i));
         }
 
         for (int i = 0; i < otherPlayer.knownMessages.size() - 1; i++) {
-            if (knownMessages.contains(otherPlayer.knownMessages.get(i)))
+            if (!knownMessages.contains(otherPlayer.knownMessages.get(i)))
                 knownMessages.add(otherPlayer.knownMessages.get(i));
         }
     }
