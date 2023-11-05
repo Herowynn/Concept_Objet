@@ -68,6 +68,8 @@ public abstract class Token {
             gameMap.getMapInfo()[coordinateX][coordinateY].setObstacle();
             gameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(false, null);
 
+        } else {
+            GameMap.safeZonePathFinder(coordinateY, coordinateX, this.Type);
         }
         else {
             gameMap.safeZonePathFinder(coordinateX, coordinateY, this.type);
