@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Map myMap = new Map(51, 14);
         List<Master> masters = new ArrayList<>();
 
-        SimulationManager manager = SimulationManager.getInstance(myMap);
+        SimulationManager manager = SimulationManager.getInstance(myMap, 50);
 
         manager.launchSimulation();
     }

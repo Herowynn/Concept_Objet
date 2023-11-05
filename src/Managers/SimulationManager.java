@@ -13,16 +13,19 @@ public class SimulationManager {
     private List<Master> masters = new ArrayList<>();
     private Mapping.Map gameMap;
 
+    private int nbOfTurnsToPlay;
+
     private static final List<String> allPossibleMessages = new ArrayList<>();
 
-    public static SimulationManager getInstance(Mapping.Map myMap) {
+    public static SimulationManager getInstance(Mapping.Map myMap, int nbOfTurn) {
         if (instance == null) {
-            instance = new SimulationManager(myMap);
+            instance = new SimulationManager(myMap, nbOfTurn);
         }
         return instance;
     }
 
-    private SimulationManager(Mapping.Map myMap){
+    private SimulationManager(Mapping.Map myMap, int nbOfTurn){
+        nbOfTurnsToPlay = nbOfTurn;
         gameMap = myMap;
         createMessagesList();
         createMasters(myMap);
@@ -89,14 +92,20 @@ public class SimulationManager {
         return allTokens;
     }*/
 
-    public void launchSimulation(){
+    public void launchSimulation() throws InterruptedException {
         Random rand = new Random();
         int indexValue;
 
+        System.out.println("Initialization");
+
         gameMap.printMap();
 
-        for(int i = 0; i < 10; i++){
+        Master winner = null;
+
+        for(int i = 0; i < nbOfTurnsToPlay; i++){
             tokensToPlay.addAll(allTokens);
+
+            System.out.println("Turn n°" + i);
 
             while(!tokensToPlay.isEmpty()){
                 indexValue = rand.nextInt(tokensToPlay.size());
@@ -105,7 +114,29 @@ public class SimulationManager {
             }
 
             gameMap.printMap();
+
+            for (Master master : masters){
+                if(master.NumberOfMessagesCollected() == 120){
+                    winner = master;
+                    break;
+                }
+            }
+
+            if(winner != null)
+                break;
+
+            //Thread.sleep(1000);
         }
+
+        if (winner == null) {
+            for (Master master : masters){
+                if(winner == null || master.NumberOfMessagesCollected() > winner.NumberOfMessagesCollected())
+                    winner = master;
+            }
+        }
+
+
+        Victory(winner, nbOfTurnsToPlay);
     }
 
     public String getMessageAtIndex(int index){
@@ -114,6 +145,10 @@ public class SimulationManager {
 
     public int getAllPossibleMessagesSize(){
         return allPossibleMessages.size();
+    }
+
+    public void Victory(Master winner, int nbOfTurn){
+        System.out.println("Team " + winner.getType() + " wins the game after " + nbOfTurn + " turns with " + winner.NumberOfMessagesCollected() + " messages collected !");
     }
 
 }

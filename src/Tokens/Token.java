@@ -70,8 +70,7 @@ public abstract class Token {
 
         }
         else {
-            System.out.println("J'utilise le pathfinding là !");
-            GameMap.safeZonePathFinder(coordinateY, coordinateX, this.Type);
+            GameMap.safeZonePathFinder(coordinateX, coordinateY, this.Type);
         }
     }
 
@@ -188,38 +187,41 @@ public abstract class Token {
         Random rand = new Random();
         String messageToExchange;
 
-        for (int i = 0; i < numberOfMessages; i++) {
-            messageToExchange = sender.knownMessages.get(rand.nextInt(sender.knownMessages.size()));
+        if (!sender.knownMessages.isEmpty()) {
+            for (int i = 0; i < numberOfMessages; i++) {
+                if(!sender.knownMessages.isEmpty()) {
+                    messageToExchange = sender.knownMessages.get(rand.nextInt(sender.knownMessages.size()));
 
-            while (receiver.knownMessages.contains(messageToExchange)) {
-                messageToExchange = sender.knownMessages.get(rand.nextInt(sender.knownMessages.size()));
+                    if (receiver.knownMessages.contains(messageToExchange)) {
+                        messageToExchange = sender.knownMessages.get(rand.nextInt(sender.knownMessages.size()));
+                    }
+
+                    receiver.knownMessages.add(messageToExchange);
+                    sender.knownMessages.remove(messageToExchange);
+                }
             }
-
-            receiver.knownMessages.add(messageToExchange);
-            sender.knownMessages.remove(messageToExchange);
         }
     }
 
     public void MessagesExchangeBetweenAllies(Token otherPlayer) {
         Random rand = new Random();
         int value;
+        String message;
 
         for (int i = 0; i < 2; i++) {
             value = rand.nextInt(knownMessages.size());
+            message = knownMessages.get(value);
 
-            while (otherPlayer.knownMessages.contains(knownMessages.get(value)))
-                value = rand.nextInt(knownMessages.size());
-
-            otherPlayer.knownMessages.add(knownMessages.get(value));
+            if (!otherPlayer.knownMessages.contains(message))
+                otherPlayer.knownMessages.add(knownMessages.get(value));
         }
 
         for (int i = 0; i < 5; i++) {
-            value = rand.nextInt(knownMessages.size());
+            value = rand.nextInt(otherPlayer.knownMessages.size());
+            message = otherPlayer.knownMessages.get(value);
 
-            while (knownMessages.contains(otherPlayer.knownMessages.get(value)))
-                value = rand.nextInt(knownMessages.size());
-
-            knownMessages.add(otherPlayer.knownMessages.get(value));
+            if (!knownMessages.contains(message))
+                knownMessages.add(otherPlayer.knownMessages.get(value));
         }
     }
 
@@ -248,7 +250,7 @@ public abstract class Token {
         }
     }
 
-    public void getMessagesFromMaster(String message){
+    public void getMessagesFromMaster(String message) {
         knownMessages.add(message);
     }
 
