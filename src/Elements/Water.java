@@ -1,9 +1,10 @@
 package Elements;
 
 import Enums.Types;
+import Managers.SimulationManager;
 import Mapping.*;
 
-public class Water extends Hydraterre {
+public class Water extends Master {
     private static Water Instance;
     protected String ANSI_Code = "\u001B[34m";
 
@@ -15,7 +16,7 @@ public class Water extends Hydraterre {
     }
     public Water(String name, Types type, Map map, int nbOfTokens){
         super(name, type, map, nbOfTokens);
-        CreatePercentagesTokens(25, 25, 25, 25);
+        CreatePercentagesTokens(50, 50);
         createTokens(Types.EAU);
         System.out.println("création d'un Water Master nommé " + Name);
 

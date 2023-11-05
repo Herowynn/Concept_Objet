@@ -9,7 +9,7 @@ import Enums.*;
 
 public class Rook extends Token {
 
-    public Rook(Mapping.Map map, String name, Elemental master) {
+    public Rook(Mapping.Map map, String name, Master master) {
         super(map, name, master);
         letterForMapDisplay = "R";
         Random random = new Random();

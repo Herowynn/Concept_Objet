@@ -9,7 +9,7 @@ import Enums.*;
 
 public class Queen extends Token {
 
-    public Queen(Mapping.Map map, String name, Elemental master) {
+    public Queen(Mapping.Map map, String name, Master master) {
         super(map, name, master);
         letterForMapDisplay = "Q";
         Random random = new Random();

@@ -8,7 +8,7 @@ import Enums.*;
 import Elements.*;
 
 public class Bishop extends Token {
-    public Bishop(Mapping.Map map, String name, Elemental master) {
+    public Bishop(Mapping.Map map, String name, Master master) {
         super(map, name, master);
         letterForMapDisplay = "B";
         Random random = new Random();

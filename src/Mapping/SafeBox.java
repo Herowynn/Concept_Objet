@@ -5,7 +5,7 @@ import Enums.*;
 
 public class SafeBox extends Box{
     public Types Type;
-    private Elemental master;
+    private Master master;
 
     public SafeBox(int x, int y, Types type) {
         super(x, y);
@@ -15,7 +15,7 @@ public class SafeBox extends Box{
         return Type;
     }
 
-    public void setMaster(Elemental master){
+    public void setMaster(Master master){
         occupiedByMaster = true;
         this.master = master;
     }
@@ -25,7 +25,7 @@ public class SafeBox extends Box{
         return true;
     }
 
-    public Elemental getMaster(){
+    public Master getMaster(){
         return master;
     }
 }

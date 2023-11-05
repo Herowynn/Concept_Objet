@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 
-import Elements.Elemental;
+import Elements.Master;
 import Enums.Directions;
 import Enums.Types;
 import Tokens.Token;
@@ -49,8 +49,7 @@ public class Map {
         int safeZoneSizeX = SizeX / 4;
         int safeZoneSizeY = SizeY / 4;
 
-        int[] safeZoneSize = {safeZoneSizeX, safeZoneSizeY};
-        return safeZoneSize;
+        return new int[]{safeZoneSizeX, safeZoneSizeY};
     }
 
     private void obstacleGeneration() {
@@ -214,7 +213,7 @@ public HashSet<String> getBoxesFromMySafeZone(Types type) {
         return safeZone;
     }
 
-    public void setMaster(int coordinateX, int coordinateY, Elemental master) {
+    public void setMaster(int coordinateX, int coordinateY, Master master) {
         ((SafeBox) mapInfo[coordinateX][coordinateY]).setMaster(master);
     }
 
@@ -271,28 +270,28 @@ public HashSet<String> getBoxesFromMySafeZone(Types type) {
                 goal = (SafeBox) mapInfo[0][0];
                 break;
         }
-        Node[][] nodeInfos;
-        nodeInfos = new Node[SizeX][SizeY];
+        Node[][] nodeInfo;
+        nodeInfo = new Node[SizeX][SizeY];
         for(int x = 0; x < SizeX; x++){
             for(int y = 0; y < SizeY; y++){
-                nodeInfos[x][y] = new Node(x, y, 1000, 1000, 1000);
+                nodeInfo[x][y] = new Node(x, y, 1000, 1000, 1000);
             }
         }
         for(int x = coordonateX - 1; x < coordonateX + 2; x++){
             for(int y = coordonateY - 1; y < coordonateY + 2; y++){
                 if(!(x == coordonateX && y == coordonateY) && x < SizeX && y < SizeY && x >= 0 && y >= 0){
-                    if(mapInfo[x][y].isBlockedByObstacle() == false){
-                        getCost(nodeInfos[x][y], nodeInfos[coordonateX][coordonateY], nodeInfos[goal.CoordonateX][goal.CoordonateY]);
+                    if(!mapInfo[x][y].isBlockedByObstacle()){
+                        getCost(nodeInfo[x][y], nodeInfo[coordonateX][coordonateY], nodeInfo[goal.CoordonateX][goal.CoordonateY]);
                     }    
                 }
             }
         }
-        Node bestNode = nodeInfos[coordonateX][coordonateY];
+        Node bestNode = nodeInfo[coordonateX][coordonateY];
         for(int x = coordonateX - 1; x <= coordonateX + 1; x++){
             for(int y = coordonateY - 1; y <= coordonateY + 1; y++){
                 if(x < SizeX && y < SizeY && x >= 0 && y >= 0){
-                    if(nodeInfos[x][y].fCost <= bestNode.fCost){
-                        bestNode = nodeInfos[x][y];
+                    if(nodeInfo[x][y].fCost <= bestNode.fCost){
+                        bestNode = nodeInfo[x][y];
                     }
                 }
                 
