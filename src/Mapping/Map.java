@@ -2,6 +2,7 @@ package Mapping;
 
 import java.util.HashSet;
 import java.util.Random;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class Map {
 
     private void obstacleGeneration() {
         Random r = new Random();
-        int int_random = r.nextInt((SizeX * SizeY) / 25);
+        int int_random = r.nextInt((SizeX * SizeY) / 25); 
         for (int obstacle = 0; obstacle < int_random; obstacle++) {
             int coordonateX_random = r.nextInt(SizeX);
             int coordonateY_random = r.nextInt(SizeY);
@@ -97,25 +98,25 @@ public class Map {
                             if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
                                 System.out.print(ANSI_RED_BACKGROUND + "M" + ANSI_RESET);
                             else
-                                System.out.print(ANSI_RED_BACKGROUND + " " + ANSI_RESET);
+                            System.out.print(ANSI_RED_BACKGROUND + " " + ANSI_RESET);
                             break;
                         case EAU:
                             if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
                                 System.out.print(ANSI_BLUE_BACKGROUND + "M" + ANSI_RESET);
                             else
-                                System.out.print(ANSI_BLUE_BACKGROUND + " " + ANSI_RESET);
+                            System.out.print(ANSI_BLUE_BACKGROUND + " " + ANSI_RESET);
                             break;
                         case AIR:
-                            if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
+                                if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
                                 System.out.print(ANSI_PURPLE_BACKGROUND + "M" + ANSI_RESET);
                             else
-                                System.out.print(ANSI_PURPLE_BACKGROUND + " " + ANSI_RESET);
+                            System.out.print(ANSI_PURPLE_BACKGROUND + " " + ANSI_RESET);
                             break;
                         case TERRE:
-                            if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
+                                if (((SafeBox) mapInfo[x][y]).isOccupiedByMaster())
                                 System.out.print(ANSI_GREEN_BACKGROUND + "M" + ANSI_RESET);
                             else
-                                System.out.print(ANSI_GREEN_BACKGROUND + " " + ANSI_RESET);
+                            System.out.print(ANSI_GREEN_BACKGROUND + " " + ANSI_RESET);
                             break;
                     }
                 } else if (mapInfo[x][y].isOccupiedByToken()) {
@@ -135,6 +136,7 @@ public class Map {
                     }
                 } else if (mapInfo[x][y].isBlockedByObstacle()) {
                     System.out.print("/");
+
                 } else {
                     System.out.print(" ");
                 }
@@ -160,21 +162,21 @@ public class Map {
             if (baseY > newY) {
                 return Directions.NW;
             } else if (baseY == newY) {
-                return Directions.N;
+                return Directions.W;
             } else {
-                return Directions.NE;
+                return Directions.SW;
             }
         } else if (baseX == newX) {
             if (baseY > newY) {
-                return Directions.W;
+                return Directions.N;
             } else if (baseY < newY) {
-                return Directions.E;
+                return Directions.S; 
             }
         } else if (baseX < newX) {
             if (baseY > newY) {
-                return Directions.SW;
+                return Directions.NE;
             } else if (baseY == newY) {
-                return Directions.S;
+                return Directions.E;
             } else {
                 return Directions.SE;
             }
@@ -196,7 +198,7 @@ public class Map {
         return availableTiles;
     }
 
-    public HashSet<String> getBoxesFromMySafeZone(Types type) {
+public HashSet<String> getBoxesFromMySafeZone(Types type) {
         HashSet<String> safeZone = new HashSet<>();
         String values;
 
@@ -219,4 +221,84 @@ public class Map {
     public void setOccupied(int coordinateX, int coordinateY, boolean value, Token token) {
         mapInfo[coordinateX][coordinateY].setOccupied(value, token);
     }
+    //////////////////////////////////////////////////////////// Path Finder to Safe Zone(inspired by A*)
+
+    private class Node{
+        int coordonateX;
+        int coordonateY;
+        int gCost;
+        int hCost;
+        int fCost;
+        private Node(int x, int y, int gCost, int hCost, int fCost){
+            this.coordonateX = x;
+            this.coordonateY = y;
+            this.gCost = gCost;
+            this.hCost = hCost;
+            this.fCost = fCost;
+        }
+    }
+
+    private int getCost(Node node, Node originNode, Node goalNode){
+        // g cost
+        int distanceX = Math.abs(node.coordonateX - originNode.coordonateX);
+        int distanceY = Math.abs(node.coordonateY - originNode.coordonateY);
+        node.gCost = distanceX + distanceY;
+
+        // h cost
+        distanceX = Math.abs(node.coordonateX - goalNode.coordonateX);
+        distanceY = Math.abs(node.coordonateY - goalNode.coordonateY); 
+        node.hCost = distanceX + distanceY;
+
+        // f cost
+        node.fCost = node.gCost + node.hCost;
+        return node.hCost;
+    }
+
+    public Directions safeZonePathFinder(int coordonateX, int coordonateY, Types type){
+        SafeBox goal = null;
+        // which safe zone
+        switch(type){
+            case FEU:
+                goal = (SafeBox) mapInfo[0][SizeY - 1];
+                break;
+            case TERRE:
+                goal = (SafeBox) mapInfo[SizeX - 1][SizeY - 1];
+                break;
+            case EAU:
+                goal = (SafeBox) mapInfo[SizeX - 1][0];
+                break;
+            case AIR:
+                goal = (SafeBox) mapInfo[0][0];
+                break;
+        }
+        Node[][] nodeInfos;
+        nodeInfos = new Node[SizeX][SizeY];
+        for(int x = 0; x < SizeX; x++){
+            for(int y = 0; y < SizeY; y++){
+                nodeInfos[x][y] = new Node(x, y, 1000, 1000, 1000);
+            }
+        }
+        for(int x = coordonateX - 1; x < coordonateX + 2; x++){
+            for(int y = coordonateY - 1; y < coordonateY + 2; y++){
+                if(!(x == coordonateX && y == coordonateY) && x < SizeX && y < SizeY && x >= 0 && y >= 0){
+                    if(mapInfo[x][y].isBlockedByObstacle() == false){
+                        getCost(nodeInfos[x][y], nodeInfos[coordonateX][coordonateY], nodeInfos[goal.CoordonateX][goal.CoordonateY]);
+                    }    
+                }
+            }
+        }
+        Node bestNode = nodeInfos[coordonateX][coordonateY];
+        for(int x = coordonateX - 1; x <= coordonateX + 1; x++){
+            for(int y = coordonateY - 1; y <= coordonateY + 1; y++){
+                if(x < SizeX && y < SizeY && x >= 0 && y >= 0){
+                    if(nodeInfos[x][y].fCost <= bestNode.fCost){
+                        bestNode = nodeInfos[x][y];
+                    }
+                }
+                
+            }
+        }
+        return getDirection(coordonateX, coordonateY, bestNode.coordonateX, bestNode.coordonateY);
+    }
+
 }
