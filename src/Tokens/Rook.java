@@ -33,8 +33,6 @@ public class Rook extends Token {
                 // the Movement price
                 MovementPrice = MinMovementPrice
                         + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
-
-                System.out.println(this.Name + " is a rook from the Air group, their team is Venflamme.");
                 break;
 
             case TERRE:
@@ -47,8 +45,6 @@ public class Rook extends Token {
                 // the Movement price
                 MovementPrice = MinMovementPrice
                         + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
-
-                System.out.println(name + " is a rook from the Earth group, their team is Hydraterre.");
                 break;
 
             case EAU:
@@ -60,7 +56,6 @@ public class Rook extends Token {
                 // the Movement price
                 MovementPrice = MinMovementPrice
                         + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
-                System.out.println(name + " is a rook from the Water group, their team is Hydraterre.");
                 break;
 
             case FEU:
@@ -72,7 +67,6 @@ public class Rook extends Token {
                 // the Movement price
                 MovementPrice = MinMovementPrice
                         + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
-                System.out.println(name + " is a rook from the Fire group, their team is Venflamme.");
                 break;
 
         }

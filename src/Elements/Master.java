@@ -25,7 +25,8 @@ public abstract class Master {
     protected int coordinateY;
     protected SimulationManager simulationManager;
 
-    public Master(String name, Types type, Mapping.Map map, int nbOfTokens){
+    public Master(String name, Types type, Mapping.Map map, int nbOfTokens, SimulationManager manager){
+        simulationManager = manager;
         Name = name;
         this.type = type;
         NumberOfTokens = nbOfTokens;
@@ -49,22 +50,16 @@ public abstract class Master {
         GameMap.setMaster(coordinateX, coordinateY, this);
     }
 
-    public void receiveMessagesFromToken(List<String> messages){
+    public void receiveMessagesFromToken(List<String> messages, Token token){
         for(String message : messages) {
             if (!MessagesCollected.contains(message))
                 MessagesCollected.add(message);
         }
+        token.knownMessages.clear();
+        giveMessagesToToken(5, token);
     }
     public void setSimulationManager(SimulationManager manager) {
         simulationManager = manager;
-    }
-
-    public void CollectMessages(String[] messagesToCollect){
-        for(String message : messagesToCollect){
-            if(!MessagesCollected.contains(message)){
-                MessagesCollected.add(message);
-            }
-        }
     }
 
     public Types getType(){
@@ -84,7 +79,9 @@ public abstract class Master {
     }
 
     protected void createTokens(Types type){
-        ElementTokens.add(new Queen(GameMap, type.toString() + " Queen", this));
+        Queen queen = new Queen(GameMap, type.toString() + " Queen", this);
+        giveMessagesToToken(10, queen);
+        ElementTokens.add(queen);
 
         Random rand = new Random();
         int value;
@@ -93,10 +90,14 @@ public abstract class Master {
             value = rand.nextInt(100);
 
             if(value <= (int)PercentagesCreationToken.values().toArray()[0]){
-                ElementTokens.add(new Bishop(GameMap, type.toString() + " Bishop" + i, this));
+                Bishop bishop = new Bishop(GameMap, type.toString() + " Bishop" + i, this);
+                giveMessagesToToken(10, bishop);
+                ElementTokens.add(bishop);
             }
             else {
-                ElementTokens.add(new Rook(GameMap, type.toString() + " Rook" + i, this));
+                Rook rook = new Rook(GameMap, type.toString() + " Rook" + i, this);
+                giveMessagesToToken(10, rook);
+                ElementTokens.add(rook);
             }
         }
     }
@@ -112,5 +113,13 @@ public abstract class Master {
 
     public void getCoordinates(){
         System.out.println(coordinateX + ", " + coordinateY);
+    }
+
+    public void giveMessagesToToken(int number, Token token){
+        Random rand = new Random();
+
+        for(int i = 0; i < number; i++){
+            token.getMessagesFromMaster(simulationManager.getMessageAtIndex(rand.nextInt(simulationManager.getAllPossibleMessagesSize())));
+        }
     }
 }

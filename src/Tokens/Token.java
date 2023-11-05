@@ -25,11 +25,11 @@ public abstract class Token {
 
     public void EnergyRegeneration() {
         EnergyLeft = EnergyMax;
+        sendMessagesToMaster();
     }
 
-    public void sendMessagesToMaster(){
-        master.receiveMessagesFromToken(knownMessages);
-        knownMessages.clear();
+    public void sendMessagesToMaster() {
+        master.receiveMessagesFromToken(knownMessages, this);
     }
 
     public Token(Mapping.Map map, String name, Master master) {
@@ -46,7 +46,7 @@ public abstract class Token {
         while (GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken()
                 || GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByMaster()
                 || (GameMap.getMapInfo()[coordinateX][coordinateY].isSafeZone()
-                        && ((SafeBox) GameMap.getMapInfo()[coordinateX][coordinateY]).getType() != Type)
+                && ((SafeBox) GameMap.getMapInfo()[coordinateX][coordinateY]).getType() != Type)
                 || GameMap.getMapInfo()[coordinateX][coordinateY].isBlockedByObstacle()) {
             coordinateX = rand.nextInt(GameMap.SizeX);
             coordinateY = rand.nextInt(GameMap.SizeY);
@@ -76,19 +76,22 @@ public abstract class Token {
 
     // Check if there is another player around for the message exchange
     protected void verifyBoxes() {
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                if (x != 0 && y != 0 && coordinateX + x <= GameMap.SizeX && coordinateY + y <= GameMap.SizeY && coordinateX + x > 0 && coordinateY + y > 0) {
-                    System.out.println(x + " " + y);
-                    if (GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken() != null && Type == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().Type) {
-                        MessagesExchangeBetweenSameTypes(
-                                GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
-                    } else if (GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken() != null && alliance == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().alliance) {
-                        MessagesExchangeBetweenAllies(
-                                GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
-                    } else if (GameMap.getMapInfo()[coordinateX + x][coordinateY - y].isOccupiedByToken()) {
-                        MessagesExchangeBetweenEnemies(
-                                GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+        if (GameMap.getMapInfo()[coordinateX][coordinateY].isSafeZone()) {
+            EnergyRegeneration();
+        } else {
+            for (int x = -1; x <= 1; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    if (x != 0 && y != 0 && coordinateX + x <= GameMap.SizeX && coordinateY + y <= GameMap.SizeY && coordinateX + x >= 0 && coordinateY + y >= 0) {
+                        if (GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken() != null && Type == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().Type) {
+                            MessagesExchangeBetweenSameTypes(
+                                    GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                        } else if (GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken() != null && alliance == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().alliance) {
+                            MessagesExchangeBetweenAllies(
+                                    GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                        } else if (GameMap.getMapInfo()[coordinateX + x][coordinateY + y].isOccupiedByToken()) {
+                            MessagesExchangeBetweenEnemies(
+                                    GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                        }
                     }
                 }
             }
@@ -228,17 +231,20 @@ public abstract class Token {
     }
 
     public void MessagesExchangeBetweenEnemies(Token otherPlayer) {
-        Token loser = otherPlayer;
+        Token loser;
         loser = master.getMiniGamesManager().playMiniGame(this, otherPlayer);
 
         if (loser == this) {
             MessageExchangeWithLoser(3, this, otherPlayer);
             System.out.println(this.Name + " s'est fait battre par " + loser.Name);
-        }
-        else{
+        } else {
             MessageExchangeWithLoser(3, otherPlayer, this);
             System.out.println(loser.Name + " s'est fait battre par " + this.Name);
         }
+    }
+
+    public void getMessagesFromMaster(String message){
+        knownMessages.add(message);
     }
 
 }
