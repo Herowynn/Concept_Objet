@@ -27,7 +27,7 @@ public abstract class Token {
         EnergyLeft = EnergyMax;
     }
 
-    public Token(Mapping.Map map, String name, Elemental master){
+    public Token(Mapping.Map map, String name, Elemental master) {
         GameMap = map;
         this.master = master;
         Type = master.getType();
@@ -38,10 +38,11 @@ public abstract class Token {
         coordinateX = rand.nextInt(GameMap.SizeX);
         coordinateY = rand.nextInt(GameMap.SizeY);
 
-        while(GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken()
+        while (GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken()
                 || GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByMaster()
-                || (GameMap.getMapInfo()[coordinateX][coordinateY].isSafeZone() && ((SafeBox)GameMap.getMapInfo()[coordinateX][coordinateY]).getType() != Type)
-                || GameMap.getMapInfo()[coordinateX][coordinateY].isBlockedByObstacle()){
+                || (GameMap.getMapInfo()[coordinateX][coordinateY].isSafeZone()
+                        && ((SafeBox) GameMap.getMapInfo()[coordinateX][coordinateY]).getType() != Type)
+                || GameMap.getMapInfo()[coordinateX][coordinateY].isBlockedByObstacle()) {
             coordinateX = rand.nextInt(GameMap.SizeX);
             coordinateY = rand.nextInt(GameMap.SizeY);
         }
@@ -75,11 +76,14 @@ public abstract class Token {
             for (int y = -1; y <= 1; y++) {
                 if (x != 0 && y != 0) {
                     if (Type == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().Type) {
-                        MessagesExchangeBetweenSameTypes(GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                        MessagesExchangeBetweenSameTypes(
+                                GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
                     } else if (alliance == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().alliance) {
-                        MessagesExchangeBetweenAllies(GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                        MessagesExchangeBetweenAllies(
+                                GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
                     } else if (GameMap.getMapInfo()[coordinateX + x][coordinateY - y].isOccupiedByToken()) {
-                        MessagesExchangeBetweenEnemies(GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                        MessagesExchangeBetweenEnemies(
+                                GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
                     }
                 }
             }
