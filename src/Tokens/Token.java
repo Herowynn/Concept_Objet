@@ -9,7 +9,7 @@ import Mapping.SafeBox;
 public abstract class Token {
     public Types Type;
     protected Alliances alliance;
-    public List<String> KnownMessages = new ArrayList<>();
+    public List<String> knownMessages = new ArrayList<>();
     public String Name;
     public double EnergyLeft;
     public double EnergyMax;
@@ -20,14 +20,19 @@ public abstract class Token {
     protected int coordinateY;
     public Directions LastDirection;
     protected Mapping.Map GameMap;
-    protected Elemental master;
+    protected Master master;
     protected String letterForMapDisplay;
 
     public void EnergyRegeneration() {
         EnergyLeft = EnergyMax;
+        sendMessagesToMaster();
     }
 
-    public Token(Mapping.Map map, String name, Elemental master) {
+    public void sendMessagesToMaster() {
+        master.receiveMessagesFromToken(knownMessages, this);
+    }
+
+    public Token(Mapping.Map map, String name, Master master) {
         GameMap = map;
         this.master = master;
         Type = master.getType();
@@ -41,7 +46,7 @@ public abstract class Token {
         while (GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken()
                 || GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByMaster()
                 || (GameMap.getMapInfo()[coordinateX][coordinateY].isSafeZone()
-                        && ((SafeBox) GameMap.getMapInfo()[coordinateX][coordinateY]).getType() != Type)
+                && ((SafeBox) GameMap.getMapInfo()[coordinateX][coordinateY]).getType() != Type)
                 || GameMap.getMapInfo()[coordinateX][coordinateY].isBlockedByObstacle()) {
             coordinateX = rand.nextInt(GameMap.SizeX);
             coordinateY = rand.nextInt(GameMap.SizeY);
@@ -61,8 +66,12 @@ public abstract class Token {
         } else if (this.EnergyLeft == 0) {
             // If the token does not have enough energy, it becomes an obstacle
             GameMap.getMapInfo()[coordinateX][coordinateY].setObstacle();
-            GameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(true, this);
+            GameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(false, null);
 
+        }
+        else {
+            System.out.println("J'utilise le pathfinding là !");
+            GameMap.safeZonePathFinder(coordinateY, coordinateX, this.Type);
         }
     }
 
@@ -72,18 +81,22 @@ public abstract class Token {
 
     // Check if there is another player around for the message exchange
     protected void verifyBoxes() {
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                if (x != 0 && y != 0) {
-                    if (Type == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().Type) {
-                        MessagesExchangeBetweenSameTypes(
-                                GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
-                    } else if (alliance == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().alliance) {
-                        MessagesExchangeBetweenAllies(
-                                GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
-                    } else if (GameMap.getMapInfo()[coordinateX + x][coordinateY - y].isOccupiedByToken()) {
-                        MessagesExchangeBetweenEnemies(
-                                GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+        if (GameMap.getMapInfo()[coordinateX][coordinateY].isSafeZone()) {
+            EnergyRegeneration();
+        } else {
+            for (int x = -1; x <= 1; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    if (x != 0 && y != 0 && coordinateX + x < GameMap.SizeX && coordinateY + y < GameMap.SizeY && coordinateX + x >= 0 && coordinateY + y >= 0) {
+                        if (GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken() != null && Type == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().Type) {
+                            MessagesExchangeBetweenSameTypes(
+                                    GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                        } else if (GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken() != null && alliance == GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken().alliance) {
+                            MessagesExchangeBetweenAllies(
+                                    GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                        } else if (GameMap.getMapInfo()[coordinateX + x][coordinateY + y].isOccupiedByToken()) {
+                            MessagesExchangeBetweenEnemies(
+                                    GameMap.getMapInfo()[coordinateX + x][coordinateY + y].getToken());
+                        }
                     }
                 }
             }
@@ -176,14 +189,14 @@ public abstract class Token {
         String messageToExchange;
 
         for (int i = 0; i < numberOfMessages; i++) {
-            messageToExchange = sender.KnownMessages.get(rand.nextInt(sender.KnownMessages.size()));
+            messageToExchange = sender.knownMessages.get(rand.nextInt(sender.knownMessages.size()));
 
-            while (receiver.KnownMessages.contains(messageToExchange)) {
-                messageToExchange = sender.KnownMessages.get(rand.nextInt(sender.KnownMessages.size()));
+            while (receiver.knownMessages.contains(messageToExchange)) {
+                messageToExchange = sender.knownMessages.get(rand.nextInt(sender.knownMessages.size()));
             }
 
-            receiver.KnownMessages.add(messageToExchange);
-            sender.KnownMessages.remove(messageToExchange);
+            receiver.knownMessages.add(messageToExchange);
+            sender.knownMessages.remove(messageToExchange);
         }
     }
 
@@ -192,33 +205,33 @@ public abstract class Token {
         int value;
 
         for (int i = 0; i < 2; i++) {
-            value = rand.nextInt(KnownMessages.size());
+            value = rand.nextInt(knownMessages.size());
 
-            while (otherPlayer.KnownMessages.contains(KnownMessages.get(value)))
-                value = rand.nextInt(KnownMessages.size());
+            while (otherPlayer.knownMessages.contains(knownMessages.get(value)))
+                value = rand.nextInt(knownMessages.size());
 
-            otherPlayer.KnownMessages.add(KnownMessages.get(value));
+            otherPlayer.knownMessages.add(knownMessages.get(value));
         }
 
         for (int i = 0; i < 5; i++) {
-            value = rand.nextInt(KnownMessages.size());
+            value = rand.nextInt(knownMessages.size());
 
-            while (KnownMessages.contains(otherPlayer.KnownMessages.get(value)))
-                value = rand.nextInt(KnownMessages.size());
+            while (knownMessages.contains(otherPlayer.knownMessages.get(value)))
+                value = rand.nextInt(knownMessages.size());
 
-            KnownMessages.add(otherPlayer.KnownMessages.get(value));
+            knownMessages.add(otherPlayer.knownMessages.get(value));
         }
     }
 
     public void MessagesExchangeBetweenSameTypes(Token otherPlayer) {
-        for (int i = 0; i < KnownMessages.size() - 1; i++) {
-            if (otherPlayer.KnownMessages.contains(KnownMessages.get(i)))
-                otherPlayer.KnownMessages.add(KnownMessages.get(i));
+        for (int i = 0; i < knownMessages.size() - 1; i++) {
+            if (!otherPlayer.knownMessages.contains(knownMessages.get(i)))
+                otherPlayer.knownMessages.add(knownMessages.get(i));
         }
 
-        for (int i = 0; i < otherPlayer.KnownMessages.size() - 1; i++) {
-            if (KnownMessages.contains(otherPlayer.KnownMessages.get(i)))
-                KnownMessages.add(otherPlayer.KnownMessages.get(i));
+        for (int i = 0; i < otherPlayer.knownMessages.size() - 1; i++) {
+            if (!knownMessages.contains(otherPlayer.knownMessages.get(i)))
+                knownMessages.add(otherPlayer.knownMessages.get(i));
         }
     }
 
@@ -226,10 +239,17 @@ public abstract class Token {
         Token loser;
         loser = master.getMiniGamesManager().playMiniGame(this, otherPlayer);
 
-        if (loser == this)
+        if (loser == this) {
             MessageExchangeWithLoser(3, this, otherPlayer);
-        else
+            System.out.println(this.Name + " s'est fait battre par " + loser.Name);
+        } else {
             MessageExchangeWithLoser(3, otherPlayer, this);
+            System.out.println(loser.Name + " s'est fait battre par " + this.Name);
+        }
+    }
+
+    public void getMessagesFromMaster(String message){
+        knownMessages.add(message);
     }
 
 }

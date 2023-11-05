@@ -9,7 +9,7 @@ import Enums.*;
 
 public class Rook extends Token {
 
-    public Rook(Mapping.Map map, String name, Elemental master) {
+    public Rook(Mapping.Map map, String name, Master master) {
         super(map, name, master);
         letterForMapDisplay = "R";
         Random random = new Random();
@@ -33,8 +33,6 @@ public class Rook extends Token {
                 // the Movement price
                 MovementPrice = MinMovementPrice
                         + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
-
-                System.out.println(this.Name + " is a rook from the Air group, their team is Venflamme.");
                 break;
 
             case TERRE:
@@ -47,8 +45,6 @@ public class Rook extends Token {
                 // the Movement price
                 MovementPrice = MinMovementPrice
                         + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
-
-                System.out.println(name + " is a rook from the Earth group, their team is Hydraterre.");
                 break;
 
             case EAU:
@@ -60,7 +56,6 @@ public class Rook extends Token {
                 // the Movement price
                 MovementPrice = MinMovementPrice
                         + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
-                System.out.println(name + " is a rook from the Water group, their team is Hydraterre.");
                 break;
 
             case FEU:
@@ -72,7 +67,6 @@ public class Rook extends Token {
                 // the Movement price
                 MovementPrice = MinMovementPrice
                         + (random.nextDouble() * (MaxMovementPrice - MinMovementPrice));
-                System.out.println(name + " is a rook from the Fire group, their team is Venflamme.");
                 break;
 
         }
@@ -80,6 +74,7 @@ public class Rook extends Token {
 
     @Override
     public void MoveToFindMessages() {
+        GameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(false, this);
 
         Random random = new Random();
 
@@ -102,35 +97,40 @@ public class Rook extends Token {
             }
         }
 
+        // Saving of the last direction
+        LastDirection = commonDirections.get(random.nextInt(commonDirections.size()));
+
         // Number of case to move, random umber between 0 and 5 inclusive
-        int numberCaseMovement = random.nextInt(6);
+        int numberCaseMovement = random.nextInt(4);
         System.out.println("random number" + numberCaseMovement);
+
         int i = 1;
-        while (coordinateX < GameMap.SizeX && coordinateY < GameMap.SizeY && i <= Math.abs(numberCaseMovement)
-                && !GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken()) {
+        while (coordinateX < GameMap.SizeX - 1 && coordinateY < GameMap.SizeY - 1 && coordinateY > 1 && coordinateX > 1 && i <= Math.abs(numberCaseMovement)
+                && !GameMap.getMapInfo()[coordinateX][coordinateY].isOccupiedByToken() && !GameMap.getMapInfo()[coordinateX][coordinateY].isBlockedByObstacle()) {
             switch (LastDirection) {
                 case E:
-                    coordinateX = coordinateX + i;
+                    coordinateX = coordinateX + 1;
                     break;
 
                 case N:
-                    coordinateY = coordinateY + i;
+                    coordinateY = coordinateY + 1;
                     break;
 
                 case S:
-                    coordinateY = coordinateY - i;
+                    coordinateY = coordinateY - 1;
                     break;
 
                 case W:
-                    coordinateX = coordinateX - i;
+                    coordinateX = coordinateX - 1;
                     break;
 
             }
             i++;
-
         }
+
         EnergyLeft = EnergyLeft - (numberCaseMovement * MovementPrice);
         EnergyLeft = Math.round(EnergyLeft * 10.0) / 10.0;
+        GameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(true, this);
 
         super.MoveToFindMessages();
     }

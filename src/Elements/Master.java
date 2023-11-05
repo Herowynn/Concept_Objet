@@ -1,15 +1,13 @@
 package Elements;
 
 import Enums.*;
-import MiniGames.*;
+import Managers.*;
 import Tokens.*;
-import Mapping.*;
 
-import javax.swing.text.Element;
 import java.util.*;
 import java.util.Map;
 
-public abstract class Elemental {
+public abstract class Master {
     public String Name;
     protected String ANSI_Code = "\u001B[0m";
     public String ANSI_ResetCode = "\u001B[0m";
@@ -25,8 +23,10 @@ public abstract class Elemental {
     protected Alliances alliance;
     protected int coordinateX;
     protected int coordinateY;
+    protected SimulationManager simulationManager;
 
-    public Elemental(String name, Types type, Mapping.Map map, int nbOfTokens){
+    public Master(String name, Types type, Mapping.Map map, int nbOfTokens, SimulationManager manager){
+        simulationManager = manager;
         Name = name;
         this.type = type;
         NumberOfTokens = nbOfTokens;
@@ -50,12 +50,16 @@ public abstract class Elemental {
         GameMap.setMaster(coordinateX, coordinateY, this);
     }
 
-    public void CollectMessages(String[] messagesToCollect){
-        for(String message : messagesToCollect){
-            if(!MessagesCollected.contains(message)){
+    public void receiveMessagesFromToken(List<String> messages, Token token){
+        for(String message : messages) {
+            if (!MessagesCollected.contains(message))
                 MessagesCollected.add(message);
-            }
         }
+        token.knownMessages.clear();
+        giveMessagesToToken(5, token);
+    }
+    public void setSimulationManager(SimulationManager manager) {
+        simulationManager = manager;
     }
 
     public Types getType(){
@@ -75,7 +79,9 @@ public abstract class Elemental {
     }
 
     protected void createTokens(Types type){
-        ElementTokens.add(new Queen(GameMap, type.toString() + " Queen", this));
+        Queen queen = new Queen(GameMap, type.toString() + " Queen", this);
+        giveMessagesToToken(10, queen);
+        ElementTokens.add(queen);
 
         Random rand = new Random();
         int value;
@@ -84,29 +90,21 @@ public abstract class Elemental {
             value = rand.nextInt(100);
 
             if(value <= (int)PercentagesCreationToken.values().toArray()[0]){
-                ElementTokens.add(new Bishop(GameMap, type.toString() + " Bishop" + i, this));
-            }
-            else if(value <= (int)PercentagesCreationToken.values().toArray()[1]){
-                // Create type Knight
-                //ElementTokens.add(new Knight(type, type.toString() + " Knight" + i));
-                ElementTokens.add(new Queen(GameMap, type.toString() + " Knight" + i, this));
-            }
-            else if(value <= (int)PercentagesCreationToken.values().toArray()[2]){
-                // Create type King
-                //ElementTokens.add(new King(type, type.toString() + " King" + i);
-                ElementTokens.add(new Queen(GameMap, type.toString() + " King" + i, this));
+                Bishop bishop = new Bishop(GameMap, type.toString() + " Bishop" + i, this);
+                giveMessagesToToken(10, bishop);
+                ElementTokens.add(bishop);
             }
             else {
-                ElementTokens.add(new Rook(GameMap, type.toString() + " Rook" + i, this));
+                Rook rook = new Rook(GameMap, type.toString() + " Rook" + i, this);
+                giveMessagesToToken(10, rook);
+                ElementTokens.add(rook);
             }
         }
     }
 
-    protected void CreatePercentagesTokens(int Bishop, int King, int Knight, int Rook){
+    protected void CreatePercentagesTokens(int Bishop, int Rook){
         PercentagesCreationToken.put("Bishop", Bishop);
-        PercentagesCreationToken.put("King", Bishop + King);
-        PercentagesCreationToken.put("Knight", Bishop + King + Knight);
-        PercentagesCreationToken.put("Rook", Bishop + Knight + King + Rook);
+        PercentagesCreationToken.put("Rook", Rook);
     }
 
     public List<Token> GetTokenList(){
@@ -115,5 +113,13 @@ public abstract class Elemental {
 
     public void getCoordinates(){
         System.out.println(coordinateX + ", " + coordinateY);
+    }
+
+    public void giveMessagesToToken(int number, Token token){
+        Random rand = new Random();
+
+        for(int i = 0; i < number; i++){
+            token.getMessagesFromMaster(simulationManager.getMessageAtIndex(rand.nextInt(simulationManager.getAllPossibleMessagesSize())));
+        }
     }
 }

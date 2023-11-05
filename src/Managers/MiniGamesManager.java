@@ -1,4 +1,4 @@
-package MiniGames;
+package Managers;
 
 import Tokens.*;
 

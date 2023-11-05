@@ -3,56 +3,19 @@
 
 import Elements.*;
 import Enums.Types;
+import Managers.SimulationManager;
 import Mapping.*;
-import MiniGames.MiniGamesManager;
-import Tokens.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
         Map myMap = new Map(51, 14);
+        List<Master> masters = new ArrayList<>();
 
-        /*Queen rook1 = new Queen(Types.AIR, "Léonard");
-        rook1.getCoordinateXY();
-        rook1.Move();
-        rook1.getCoordinateXY();
-        rook1.getEnergyLeft();*/
+        SimulationManager manager = SimulationManager.getInstance(myMap);
 
-        List<Token> tokens;
-        List<Elemental> masters = new ArrayList<>();
-
-        Air AirMaster = Air.getInstance("AirMaster", Types.AIR, myMap, 5);
-        Fire FireMaster = Fire.getInstance("FireMaster", Types.FEU, myMap, 5);
-        Water WaterMaster = Water.getInstance("WaterMaster", Types.EAU, myMap, 5);
-        Earth EarthMaster = Earth.getInstance("EarthMaster", Types.TERRE, myMap, 5);
-
-        masters.add(AirMaster);
-        masters.add(FireMaster);
-        masters.add(WaterMaster);
-        masters.add(EarthMaster);
-
-        /*SimulationManager.getInstance(masters);
-        tokens = SimulationManager.GetAllTokensFromMasters();
-        for (Token token : tokens) {
-            System.out.println(token.getLetterForMapDisplay());
-        }*/
-
-        /*MiniGamesManager mGManager = new MiniGamesManager();
-        Random rand = new Random();
-
-        for(int i = 0; i < 10; i++){
-            System.out.println(mGManager.playMiniGame(tokens.get(rand.nextInt(tokens.size())), tokens.get(rand.nextInt(tokens.size()))).Name);
-        }*/
-
-        /*for(Elemental master : masters){
-            master.getCoordinates();
-        }*/
-
-        myMap.printMap();
-
-
+        manager.launchSimulation();
     }
 }
