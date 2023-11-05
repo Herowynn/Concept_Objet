@@ -130,6 +130,8 @@ public class Bishop extends Token {
 
         gameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(true, this);
 
+        System.out.println(name + " s'est déplacé en " + coordinateX + ", " + coordinateY);
+
         super.moveToFindMessages();
     }
 }

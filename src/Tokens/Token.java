@@ -170,6 +170,7 @@ public abstract class Token {
     }
 
     public void messageExchangeWithLoser(int numberOfMessages, Token sender, Token receiver) {
+        System.out.println(sender.getName() + " donnera donc " + numberOfMessages + " à " + receiver);
         Random rand = new Random();
         String messageToExchange;
 
@@ -184,42 +185,53 @@ public abstract class Token {
 
                     receiver.knownMessages.add(messageToExchange);
                     sender.knownMessages.remove(messageToExchange);
+                    System.out.println("Les deux pions viennent d'échanger le message suivant : " + messageToExchange);
                 }
             }
         }
     }
 
     public void messagesExchangeBetweenAllies(Token otherPlayer) {
+        System.out.println(name + " échange 2 messages avec son allié " + otherPlayer.name);
+
         Random rand = new Random();
         int value;
-        String message;
+        String messageToExchange;
 
         for (int i = 0; i < 2; i++) {
             value = rand.nextInt(knownMessages.size());
-            message = knownMessages.get(value);
+            messageToExchange = knownMessages.get(value);
+            
+            System.out.println("Les deux pions viennent d'échanger le message suivant : " + messageToExchange);
 
-            if (!otherPlayer.knownMessages.contains(message))
+            if (!otherPlayer.knownMessages.contains(messageToExchange))
                 otherPlayer.knownMessages.add(knownMessages.get(value));
         }
 
         for (int i = 0; i < 5; i++) {
             value = rand.nextInt(otherPlayer.knownMessages.size());
-            message = otherPlayer.knownMessages.get(value);
+            messageToExchange = otherPlayer.knownMessages.get(value);
+            System.out.println("Les deux pions viennent d'échanger le message suivant : " + messageToExchange);
 
-            if (!knownMessages.contains(message))
+            if (!knownMessages.contains(messageToExchange))
                 knownMessages.add(otherPlayer.knownMessages.get(value));
         }
     }
 
     public void messagesExchangeBetweenSameTypes(Token otherPlayer) {
+        System.out.println(this.name + " et " + otherPlayer.name + " mettent en commun leus savoir !");
         for (int i = 0; i < knownMessages.size() - 1; i++) {
             if (!otherPlayer.knownMessages.contains(knownMessages.get(i)))
                 otherPlayer.knownMessages.add(knownMessages.get(i));
+
+            System.out.println(otherPlayer.name + " vient de recevoir le message suivant " + knownMessages.get(i));
         }
 
         for (int i = 0; i < otherPlayer.knownMessages.size() - 1; i++) {
             if (!knownMessages.contains(otherPlayer.knownMessages.get(i)))
                 knownMessages.add(otherPlayer.knownMessages.get(i));
+
+            System.out.println(name + " vient de recevoir le message suivant " + otherPlayer.knownMessages.get(i));
         }
     }
 
@@ -246,5 +258,9 @@ public abstract class Token {
 
     public Types getType() {
         return type;
+    }
+
+    public String getName(){
+        return name;
     }
 }

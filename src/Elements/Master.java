@@ -43,6 +43,8 @@ public abstract class Master {
         coordinateY = Integer.parseInt(coordinates.split(",")[1]);
 
         gameMap.setMaster(coordinateX, coordinateY, this);
+
+        System.out.println("Le Master de type " + type + " a été créé et positionné en " + coordinateX + ", " + coordinateY);
     }
 
     public void receiveMessagesFromToken(List<String> messages, Token token){
@@ -74,6 +76,7 @@ public abstract class Master {
         Queen queen = new Queen(gameMap, type.toString() + " Queen", this);
         giveMessagesToToken(10, queen);
         elementTokens.add(queen);
+        System.out.println("Un Queen a été crée " + queen.getName());
 
         Random rand = new Random();
         int value;
@@ -85,11 +88,14 @@ public abstract class Master {
                 Bishop bishop = new Bishop(gameMap, type.toString() + " Bishop" + i, this);
                 giveMessagesToToken(10, bishop);
                 elementTokens.add(bishop);
+                System.out.println("Un Bishop a été crée " + bishop.getName());
             }
             else {
                 Rook rook = new Rook(gameMap, type.toString() + " Rook" + i, this);
                 giveMessagesToToken(10, rook);
                 elementTokens.add(rook);
+                System.out.println("Un Rook a été crée " + rook.getName());
+
             }
         }
     }
@@ -103,15 +109,12 @@ public abstract class Master {
         return elementTokens;
     }
 
-    /*public void getCoordinates(){
-        System.out.println(coordinateX + ", " + coordinateY);
-    }*/
-
     public void giveMessagesToToken(int number, Token token){
         Random rand = new Random();
 
         for(int i = 0; i < number; i++){
             token.getMessagesFromMaster(simulationManager.getMessageAtIndex(rand.nextInt(simulationManager.getAllPossibleMessagesSize())));
+            System.out.println("Le message " + token.getKnownMessages().get(token.getKnownMessages().size() - 1) + " a été transmis à " + token.getName());
         }
     }
 }
