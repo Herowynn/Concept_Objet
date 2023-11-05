@@ -131,6 +131,7 @@ public class Rook extends Token {
         energyLeft = energyLeft - (numberCaseMovement * movementPrice);
         energyLeft = Math.round(energyLeft * 10.0) / 10.0;
         gameMap.getMapInfo()[coordinateX][coordinateY].setOccupied(true, this);
+        System.out.println(name + " s'est déplacé en " + coordinateX + ", " + coordinateY);
 
         super.moveToFindMessages();
     }

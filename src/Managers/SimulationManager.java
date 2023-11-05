@@ -12,19 +12,21 @@ public class SimulationManager {
     private List<Token> tokensToPlay = new ArrayList<>();
     private List<Master> masters = new ArrayList<>();
     private Mapping.Map gameMap;
+    private int delayBetweenTurns; // en milli-secondes
 
     private int nbOfTurnsToPlay;
 
     private static final List<String> allPossibleMessages = new ArrayList<>();
 
-    public static SimulationManager getInstance(Mapping.Map myMap, int nbOfTurn) {
+    public static SimulationManager getInstance(Mapping.Map myMap, int nbOfTurn, int delayBetweenTurns) {
         if (instance == null) {
-            instance = new SimulationManager(myMap, nbOfTurn);
+            instance = new SimulationManager(myMap, nbOfTurn, delayBetweenTurns);
         }
         return instance;
     }
 
-    private SimulationManager(Mapping.Map myMap, int nbOfTurn){
+    private SimulationManager(Mapping.Map myMap, int nbOfTurn, int delayBetweenTurns){
+        this.delayBetweenTurns = delayBetweenTurns;
         nbOfTurnsToPlay = nbOfTurn;
         gameMap = myMap;
         createMessagesList();
@@ -84,7 +86,7 @@ public class SimulationManager {
             if(winner != null)
                 break;
 
-            //Thread.sleep(1000);
+            Thread.sleep(delayBetweenTurns);
         }
 
         if (winner == null) {
@@ -144,7 +146,9 @@ public class SimulationManager {
     }
 
     public void Victory(Master winner, int nbOfTurn){
-        System.out.println("Team " + winner.getType() + " wins the game after " + nbOfTurn + " turns with " + winner.getNumberOfMessagesCollected() + " messages collected !");
+        System.out.println("L'équipe " + winner.getType() + " a gagné la partie au bout de  " + nbOfTurn +
+                " tours en ayant collecté " + winner.getNumberOfMessagesCollected() + " messages au total !");
+        System.out.println("Félicitations aux vainqueurs !");
     }
 
 }
