@@ -188,8 +188,8 @@ public class Map {
         List<Directions> availableTiles = new ArrayList<Directions>();
         for (int x = coordonateX - 1; x <= coordonateX + 1; x++) {
             for (int y = coordonateY - 1; y <= coordonateY + 1; y++) {
-                if (x != -1 && y != -1 && x != SizeX && y != SizeY) {
-                    if (!mapInfo[x][y].isBlockedByObstacle() && (x != coordonateX && y != coordonateY)) {
+                if (x < SizeX && y < SizeY && x >= 0 && y >= 0) {
+                    if (!mapInfo[x][y].isBlockedByObstacle() && !(x == coordonateX && y == coordonateY)) {
                         availableTiles.add(getDirection(coordonateX, coordonateY, x, y));
                     }
                 }
@@ -300,5 +300,4 @@ public HashSet<String> getBoxesFromMySafeZone(Types type) {
         }
         return getDirection(coordonateX, coordonateY, bestNode.coordonateX, bestNode.coordonateY);
     }
-
 }
