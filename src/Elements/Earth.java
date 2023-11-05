@@ -19,6 +19,6 @@ public class Earth extends Master {
         super(name, type, map, nbOfTokens, manager);
         CreatePercentagesTokens(70, 30);
         createTokens(Types.TERRE);
-        System.out.println("création d'un Earth Master nommé " + Name);
+        System.out.println("création d'un Earth Master nommé " + this.name);
     }
 }

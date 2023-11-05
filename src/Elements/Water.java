@@ -18,7 +18,7 @@ public class Water extends Master {
         super(name, type, map, nbOfTokens, manager);
         CreatePercentagesTokens(50, 50);
         createTokens(Types.EAU);
-        System.out.println("création d'un Water Master nommé " + Name);
+        System.out.println("création d'un Water Master nommé " + this.name);
 
     }
 }

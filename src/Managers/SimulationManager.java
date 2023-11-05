@@ -116,7 +116,7 @@ public class SimulationManager {
             gameMap.printMap();
 
             for (Master master : masters){
-                if(master.NumberOfMessagesCollected() == 120){
+                if(master.getNumberOfMessagesCollected() == 120){
                     winner = master;
                     break;
                 }
@@ -130,7 +130,7 @@ public class SimulationManager {
 
         if (winner == null) {
             for (Master master : masters){
-                if(winner == null || master.NumberOfMessagesCollected() > winner.NumberOfMessagesCollected())
+                if(winner == null || master.getNumberOfMessagesCollected() > winner.getNumberOfMessagesCollected())
                     winner = master;
             }
         }
@@ -148,7 +148,7 @@ public class SimulationManager {
     }
 
     public void Victory(Master winner, int nbOfTurn){
-        System.out.println("Team " + winner.getType() + " wins the game after " + nbOfTurn + " turns with " + winner.NumberOfMessagesCollected() + " messages collected !");
+        System.out.println("Team " + winner.getType() + " wins the game after " + nbOfTurn + " turns with " + winner.getNumberOfMessagesCollected() + " messages collected !");
     }
 
 }

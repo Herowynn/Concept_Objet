@@ -8,13 +8,13 @@ import java.util.*;
 import java.util.Map;
 
 public abstract class Master {
-    public String Name;
+    protected String name;
     protected String ANSI_Code = "\u001B[0m";
-    public String ANSI_ResetCode = "\u001B[0m";
+    protected String ANSI_ResetCode = "\u001B[0m";
     protected int NumberOfTokens;
     protected List<String> MessagesCollected = new ArrayList<String>();
-    public Map<String, Integer> BonusMalusEnergy = new Hashtable<String, Integer>();
-    public Map<String, Integer> BonusMalusMovement = new Hashtable<String, Integer>();
+    protected Map<String, Integer> BonusMalusEnergy = new Hashtable<String, Integer>();
+    protected Map<String, Integer> BonusMalusMovement = new Hashtable<String, Integer>();
     protected HashMap<String, Integer> PercentagesCreationToken = new HashMap<String, Integer>();
     protected List<Token> ElementTokens = new ArrayList<Token>();
     protected Mapping.Map GameMap;
@@ -27,7 +27,7 @@ public abstract class Master {
 
     public Master(String name, Types type, Mapping.Map map, int nbOfTokens, SimulationManager manager){
         simulationManager = manager;
-        Name = name;
+        this.name = name;
         this.type = type;
         NumberOfTokens = nbOfTokens;
         GameMap = map;
@@ -74,7 +74,7 @@ public abstract class Master {
         return miniGamesManager;
     }
 
-    public int NumberOfMessagesCollected(){
+    public int getNumberOfMessagesCollected(){
         return MessagesCollected.size();
     }
 

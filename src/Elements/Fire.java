@@ -19,7 +19,7 @@ public class Fire extends Master {
         super(name, type, map, nbOfTokens, manager);
         CreatePercentagesTokens(40, 60);
         createTokens(Types.FEU);
-        System.out.println("création d'un Fire Master nommé " + Name);
+        System.out.println("création d'un Fire Master nommé " + this.name);
 
     }
 }
